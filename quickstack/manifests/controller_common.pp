@@ -170,6 +170,14 @@ class quickstack::controller_common (
   $source                        = $quickstack::params::source,
   $controller_private            = $quickstack::params::controller_private,
   $ntp_public_servers            = $quickstack::params::ntp_public_servers,
+  $backups_user                  = $quickstack::params::backups_user,
+  $backups_script_src            = $quickstack::params::backups_script_controller,
+  $backups_dir                   = $quickstack::params::backups_directory,
+  $backups_log                   = $quickstack::params::backups_log,
+  $backups_email                 = $quickstack::params::backups_email,
+  $backups_ssh_key               = $quickstack::params::backups_ssh_key,
+  $backups_hour                  = $quickstack::params::backups_local_hour,
+  $backups_min                   = $quickstack::params::backups_local_min, 
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -804,5 +812,18 @@ class quickstack::controller_common (
 
   # Create semodule for keystone-all access to fernet keys
   class {'moc_openstack::keystone_all_semodule':}
+ 
+  # Installs scripts for automated backups
+  class {'backups':
+    user           => $backups_user,
+    script_src     => $backups_script_src,
+    script_dest    => "/home/${backups_user}/scripts/local_backup.sh",
+    directory_tree => [ $backups_dir, "/home/${backups_user}/scripts" ],
+    log_file       => $backups_log,
+    ssh_key        => $backups_ssh_key,
+    cron_email     => $backups_email,
+    cron_hour      => $backups_hour,
+    cron_min       => $backups_min,
+  }
 
 }
