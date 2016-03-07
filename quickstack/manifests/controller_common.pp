@@ -167,8 +167,8 @@ class quickstack::controller_common (
   $glance_cert                   = $quickstack::params::glance_cert,
   $neutron_key                   = $quickstack::params::neutron_key,
   $neutron_cert                  = $quickstack::params::neutron_cert,
-  $source                        = $quickstack::params::source,
-  $controller_private            = $quickstack::params::controller_private,
+  $public_net                    = $quickstack::params::public_net,
+  $private_net                   = $quickstack::params::private_net,
   $ntp_public_servers            = $quickstack::params::ntp_public_servers,
   $backups_user                  = $quickstack::params::backups_user,
   $backups_script_src            = $quickstack::params::backups_script_controller,
@@ -689,23 +689,23 @@ class quickstack::controller_common (
 
   firewall { '001 controller incoming':
     proto    => 'tcp',
-    dport    => ['80', '443', '3260', '3306', '5000', '35357', '5672', '8773', '8774', '8775', '8776', '8777', '9292', '6080'],
+    dport    => ['80', '443', '5000', '35357', '8080', '8773', '8774', '8775', '8776', '8777', '9292', '9696', '6080'],
     action   => 'accept',
   }
 
-  firewall { '001 controller incoming pt2':
-    proto    => 'tcp',
-    dport    => ['8000', '8003', '8004','6789'],
-    action   => 'accept',
-  }
+#  firewall { '001 controller incoming pt2':
+#    proto    => 'tcp',
+#    dport    => ['8000', '8003', '8004','6789'],
+#    action   => 'accept',
+#  }
 
   if $ssl {
     if str2bool_i("$horizon_ssl") {
-      firewall { '002 horizon incoming':
-        proto  => 'tcp',
-        dport  => ['443',],
-        action => 'accept',
-      }
+#      firewall { '002 horizon incoming':
+#        proto  => 'tcp',
+#        dport  => ['443',],
+#        action => 'accept',
+#      }
     }
 
     if str2bool_i("$amqp_ssl") {
@@ -796,9 +796,9 @@ class quickstack::controller_common (
   }
 
   class { 'moc_openstack::firewall':
-    interface => $ceph_iface,
-    source    => $source,
-    controller_private => $controller_private,
+    interface   => $ceph_iface,
+    public_net  => $public_net,
+    private_net => $private_net,
   }
 
   class {'quickstack::ntp':
@@ -826,5 +826,10 @@ class quickstack::controller_common (
     cron_hour      => $backups_hour,
     cron_min       => $backups_min,
   }
+
+ # Create entries in /etc/hosts
+ class {'hosts':
+   before  => Class['quickstack::amqp::server', 'quickstack::db::mysql'],
+ }
 
 }

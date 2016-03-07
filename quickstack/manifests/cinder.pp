@@ -35,7 +35,7 @@ class quickstack::cinder(
   $use_ssl         = false,
   $nova_pub_url    = 'http://localhost:8774/',
 ) {
-  include ::quickstack::firewall::cinder
+#  include ::quickstack::firewall::cinder
 
   if str2bool_i("$use_ssl") {
     $auth_protocol = 'https'

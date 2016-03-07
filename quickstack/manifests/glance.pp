@@ -189,7 +189,7 @@ class quickstack::glance (
   } else {
     fail("Unsupported backend ${backend}")
   }
-  class {'::quickstack::firewall::glance':}
+#  class {'::quickstack::firewall::glance':}
 
   class {'moc_openstack::ssl::temp_glance_fix':}
 }

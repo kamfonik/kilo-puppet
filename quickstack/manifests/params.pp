@@ -353,8 +353,9 @@ class quickstack::params (
   $sensu_rabbitmq_password,
 
   # Firewall
-  $source,
-  $controller_private,
+  $public_net,
+  $private_net,
+  $controller_private_ip,
 
   #NTP
   $ntp_public_servers,
