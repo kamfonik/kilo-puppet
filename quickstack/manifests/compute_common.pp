@@ -403,9 +403,10 @@ class quickstack::compute_common (
   # Installs scripts for automated backups
   class {'backups':
     user           => $backups_user,
+    user_dirs	   => [ "/home/${backups_user}/.ssh", "/home/${backups_user}/scripts" ],
     script_src     => $backups_script_src,
     script_dest    => "/home/${backups_user}/scripts/local_backup.sh",
-    directory_tree => [ $backups_dir, "/home/${backups_user}/scripts" ],
+    backups_dir    => $backups_dir,
     log_file       => $backups_log,
     ssh_key        => $backups_ssh_key,
     cron_email     => $backups_email,
