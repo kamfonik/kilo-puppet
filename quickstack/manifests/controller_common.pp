@@ -693,6 +693,11 @@ class quickstack::controller_common (
     action   => 'accept',
   }
 
+  firewall {'001 allow public-ip of controller':
+    source => $controller_admin_host,
+    action => 'accept',
+  }
+
 #  firewall { '001 controller incoming pt2':
 #    proto    => 'tcp',
 #    dport    => ['8000', '8003', '8004','6789'],
