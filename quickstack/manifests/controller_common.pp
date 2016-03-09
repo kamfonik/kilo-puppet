@@ -822,8 +822,7 @@ class quickstack::controller_common (
  
   # Installs scripts for automated backups
   class {'backups':
-    user           => $backups_user,
-    user_dirs	   => [ "/home/${backups_user}/.ssh", "/home/${backups_user}/scripts" ], 
+    user           => $backups_user, 
     script_src     => $backups_script_src,
     script_local   => $backups_script_local,
     backups_dir    => $backups_dir,
