@@ -65,12 +65,12 @@ class backups (
     #There *must* be a new line character at the end of the 'content' string, otherwise sudo breaks on the target.
     file { 'sudo-permissions':
       ensure  => file,
-      path    => '/etc/sudoers.d/10-${backups-user}',
+      path    => "/etc/sudoers.d/10-${user}",
       owner   => 'root',
       group   => 'root',
       mode    => '0600',
       replace => true,
-      content => "#This file is managed by Puppet\nDefaults:${user}\t!requiretty\n\n${user}\tALL=(root)\${sudoers_d}\n",
+      content => "#This file is managed by Puppet\nDefaults:${user}\t!requiretty\n\n${user}\tALL=(root)\t${sudoers_d}\n",
     }
      
     file { $log_file :

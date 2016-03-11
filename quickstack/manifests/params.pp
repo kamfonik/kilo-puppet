@@ -370,8 +370,10 @@ class quickstack::params (
   $backups_log,
   $backups_email,
   $backups_ssh_key,
+  $backups_sudoers_d,
   $backups_script_controller,
   $backups_script_compute,
+  $backups_script_local_name,
   $backups_local_hour,
   $backups_local_min, 
 ) {
