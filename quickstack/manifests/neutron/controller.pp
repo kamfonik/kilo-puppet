@@ -498,18 +498,8 @@ class quickstack::neutron::controller (
 #    dport    => ['9696'],
 #    action   => 'accept',
 #  }
-
-  class { '::timezone':
-    timezone => 'America/New_York',
-  }
-
-  class { '::ssh': }
-
-  class { '::workarounds::disable_lro': }
-
-  class { '::vim': 
-    opt_misc => ['backspace=2','tabstop=4','shiftwidth=4','expandtab','nocp','relativenumber','number','ruler','hlsearch','showcmd','showmatch','ignorecase','smartcase','incsearch','autowrite','hidden']
-  }
+#
+  class {'moc_config::server_config'}
 
   # Add dnsmasq-neutron.conf for MTU specification
   class {'moc_openstack::dnsmasq_neutron':

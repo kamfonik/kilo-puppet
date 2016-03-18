@@ -276,17 +276,7 @@ class quickstack::neutron::compute (
 #    port => $ovs_vxlan_udp_port,
 #  }
 
-  class { '::timezone':
-    timezone => 'America/New_York',
-  }
-
-  class { '::ssh': }
-
-  class { '::workarounds::disable_lro': }
-
-  class { '::vim': 
-    opt_misc => ['backspace=2','tabstop=4','shiftwidth=4','expandtab','nocp','relativenumber','number','ruler','hlsearch','showcmd','showmatch','ignorecase','smartcase','incsearch','autowrite','hidden']
-  }
+  class {'moc_config::server_config'}
 
   # Security Rules fix for Openstack Instances
   sysctl::value { 'net.ipv4.conf.all.rp_filter': value => 0 }
