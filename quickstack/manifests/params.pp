@@ -62,7 +62,10 @@ class quickstack::params (
   $neutron_pub_url,
   $neutron_priv_url,
   $neutron_admin_url,
-  
+  # swift
+  $swift_pub_url,
+  $swift_priv_url,
+  $swift_admin_url, 
   
   # Cinder
   $cinder_db_password,
@@ -350,8 +353,9 @@ class quickstack::params (
   $sensu_rabbitmq_password,
 
   # Firewall
-  $source,
-  $controller_private,
+  $public_net,
+  $private_net,
+  $controller_private_ip,
 
   #NTP
   $ntp_public_servers,

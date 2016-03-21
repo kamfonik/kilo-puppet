@@ -188,7 +188,7 @@ class quickstack::neutron::compute (
     $local_ip = find_ip("$ovs_tunnel_network","$ovs_tunnel_iface","")
     class { '::neutron::agents::ml2::ovs':
       bridge_uplinks   => $ovs_bridge_uplinks,
-      bridge_mappings  => $ovs_bridge_mappings,
+      #bridge_mappings  => $ovs_bridge_mappings,
       l2_population    => str2bool_i("$ovs_l2_population"),
       local_ip         => $local_ip,
       enable_tunneling => str2bool_i("$enable_tunneling"),
@@ -270,23 +270,13 @@ class quickstack::neutron::compute (
     horizon_ssl                  => $horizon_ssl,
   }
 
-  class {'quickstack::neutron::firewall::gre':}
+#  class {'quickstack::neutron::firewall::gre':}
 
-  class {'quickstack::neutron::firewall::vxlan':
-    port => $ovs_vxlan_udp_port,
-  }
+#  class {'quickstack::neutron::firewall::vxlan':
+#    port => $ovs_vxlan_udp_port,
+#  }
 
-  class { '::timezone':
-    timezone => 'America/New_York',
-  }
-
-  class { '::ssh': }
-
-  class { '::workarounds::disable_lro': }
-
-  class { '::vim': 
-    opt_misc => ['backspace=2','tabstop=4','shiftwidth=4','expandtab','nocp','relativenumber','number','ruler','hlsearch','showcmd','showmatch','ignorecase','smartcase','incsearch','autowrite','hidden']
-  }
+  class {'moc_config::server_config'}
 
   # Security Rules fix for Openstack Instances
   sysctl::value { 'net.ipv4.conf.all.rp_filter': value => 0 }

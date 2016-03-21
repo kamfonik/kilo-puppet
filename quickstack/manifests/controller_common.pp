@@ -87,6 +87,9 @@ class quickstack::controller_common (
   $cinder_admin_url              = $quickstack::params::cinder_admin_url,
   $cinder_priv_url               = $quickstack::params::cinder_priv_url,
   $cinder_pub_url                = $quickstack::params::cinder_pub_url,
+  $swift_admin_url               = $quickstack::params::swift_admin_url,
+  $swift_priv_url                = $quickstack::params::swift_priv_url,
+  $swift_pub_url                 = $quickstack::params::swift_pub_url,
   #
 
   $glance_db_password            = $quickstack::params::glance_db_password,
@@ -164,8 +167,8 @@ class quickstack::controller_common (
   $glance_cert                   = $quickstack::params::glance_cert,
   $neutron_key                   = $quickstack::params::neutron_key,
   $neutron_cert                  = $quickstack::params::neutron_cert,
-  $source                        = $quickstack::params::source,
-  $controller_private            = $quickstack::params::controller_private,
+  $public_net                    = $quickstack::params::public_net,
+  $private_net                   = $quickstack::params::private_net,
   $ntp_public_servers            = $quickstack::params::ntp_public_servers,
 ) inherits quickstack::params {
 
@@ -374,9 +377,9 @@ class quickstack::controller_common (
 
   class { 'swift::keystone::auth':
     password         => $swift_admin_password,
-    public_address   => $controller_pub_host,
-    internal_address => $controller_priv_host,
-    admin_address    => $controller_admin_host
+    public_address   => $swift_pub_url,
+    internal_address => $swift_priv_url,
+    admin_address    => $swift_admin_url
   }
 
   class {'quickstack::glance':
@@ -678,23 +681,28 @@ class quickstack::controller_common (
 
   firewall { '001 controller incoming':
     proto    => 'tcp',
-    dport    => ['80', '443', '3260', '3306', '5000', '35357', '5672', '8773', '8774', '8775', '8776', '8777', '9292', '6080'],
+    dport    => ['80', '443', '5000', '35357', '8080', '8773', '8774', '8775', '8776', '8777', '9292', '9696', '6080'],
     action   => 'accept',
   }
 
-  firewall { '001 controller incoming pt2':
-    proto    => 'tcp',
-    dport    => ['8000', '8003', '8004','6789'],
-    action   => 'accept',
+  firewall {'001 allow public-ip of controller':
+    source => $controller_admin_host,
+    action => 'accept',
   }
+
+#  firewall { '001 controller incoming pt2':
+#    proto    => 'tcp',
+#    dport    => ['8000', '8003', '8004','6789'],
+#    action   => 'accept',
+#  }
 
   if $ssl {
     if str2bool_i("$horizon_ssl") {
-      firewall { '002 horizon incoming':
-        proto  => 'tcp',
-        dport  => ['443',],
-        action => 'accept',
-      }
+#      firewall { '002 horizon incoming':
+#        proto  => 'tcp',
+#        dport  => ['443',],
+#        action => 'accept',
+#      }
     }
 
     if str2bool_i("$amqp_ssl") {
@@ -785,9 +793,9 @@ class quickstack::controller_common (
   }
 
   class { 'moc_openstack::firewall':
-    interface => $ceph_iface,
-    source    => $source,
-    controller_private => $controller_private,
+    interface   => $ceph_iface,
+    public_net  => $public_net,
+    private_net => $private_net,
   }
 
   class {'quickstack::ntp':
@@ -801,5 +809,10 @@ class quickstack::controller_common (
 
   # Create semodule for keystone-all access to fernet keys
   class {'moc_openstack::keystone_all_semodule':}
+
+ # Create entries in /etc/hosts
+ class {'hosts':
+   before  => Class['quickstack::amqp::server', 'quickstack::db::mysql'],
+ }
 
 }

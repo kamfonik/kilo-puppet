@@ -134,6 +134,7 @@ class nova::compute (
   $auth_protocol                      = 'http',
   $auth_uri                           = 'http://127.0.0.1:5000/v2.0',
   $identity_uri                       = 'http://127.0.0.1:35357',
+  $resume_guests_state                = 'true',
 ) {
 
   include ::nova::params
@@ -142,6 +143,7 @@ class nova::compute (
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
+    'DEFAULT/resume_guests_state_on_host_boot' : value => $resume_guests_state;
   }
 
   if ($vnc_enabled) {
