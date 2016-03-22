@@ -499,7 +499,7 @@ class quickstack::neutron::controller (
 #    action   => 'accept',
 #  }
 #
-  class {'moc_config::server_config'}
+  class {'moc_config::server_config':}
 
   # Add dnsmasq-neutron.conf for MTU specification
   class {'moc_openstack::dnsmasq_neutron':

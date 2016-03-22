@@ -92,6 +92,16 @@ class quickstack::compute_common (
   $public_net                   = $quickstack::params::public_net,
   $private_net                  = $quickstack::params::private_net,
   $ntp_local_servers            = $quickstack::params::ntp_local_servers,
+  $backups_user                  = $quickstack::params::backups_user,
+  $backups_script_src            = $quickstack::params::backups_script_compute,
+  $backups_script_local		 = $quickstack::params::backups_script_local_name,
+  $backups_dir                   = $quickstack::params::backups_directory,
+  $backups_log                   = $quickstack::params::backups_log,
+  $backups_email                 = $quickstack::params::backups_email,
+  $backups_ssh_key               = $quickstack::params::backups_ssh_key,
+  $backups_sudoers_d		 = $quickstack::params::backups_sudoers_d,
+  $backups_hour                  = $quickstack::params::backups_local_hour,
+  $backups_min                   = $quickstack::params::backups_local_min, 
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl") {
@@ -394,6 +404,20 @@ class quickstack::compute_common (
 
   class {'quickstack::ntp':
     servers => $ntp_local_servers,
+  }
+
+  # Installs scripts for automated backups
+  class {'backups':
+    user           => $backups_user,
+    script_src     => $backups_script_src,
+    script_local   => $backups_script_local,
+    backups_dir    => $backups_dir,
+    log_file       => $backups_log,
+    ssh_key        => $backups_ssh_key,
+    sudoers_d	   => $backups_sudoers_d,
+    cron_email     => $backups_email,
+    cron_hour      => $backups_hour,
+    cron_min       => $backups_min, 
   }
 
 }
