@@ -276,7 +276,7 @@ class quickstack::neutron::compute (
 #    port => $ovs_vxlan_udp_port,
 #  }
 
-  class {'moc_config::server_config'}
+  class {'moc_config::server_config':}
 
   # Security Rules fix for Openstack Instances
   sysctl::value { 'net.ipv4.conf.all.rp_filter': value => 0 }
