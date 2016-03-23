@@ -834,9 +834,4 @@ class quickstack::controller_common (
     cron_min       => $backups_min,
   }
 
- # Create entries in /etc/hosts
- class {'hosts':
-   before  => Class['quickstack::amqp::server', 'quickstack::db::mysql'],
- }
-
 }
