@@ -150,7 +150,8 @@ class quickstack::controller_common (
   $sensu_rabbitmq_host           = $quickstack::params::sensu_rabbitmq_host,
   $sensu_rabbitmq_user           = $quickstack::params::sensu_rabbitmq_user,
   $sensu_rabbitmq_password       = $quickstack::params::sensu_rabbitmq_password,
-  $sensu_client_subscriptions_controller   = ['moc-sensu','openstack-api','openstack-metrics'],
+  $sensu_client_subscriptions_controller   = 'moc-sensu',
+  $sensu_client_keepalive       = { "thresholds" => { "warning" => 60, "critical" => 300 }, "handlers" => ["node-email"], "refresh" => 3600 },
   $ceph_key                      = $quickstack::params::ceph_key,
   $use_ssl_endpoints             = $quickstack::params::use_ssl_endpoints,
   $neutron_admin_password        = $quickstack::params::neutron_user_password,
@@ -781,6 +782,7 @@ class quickstack::controller_common (
     rabbitmq_password => $sensu_rabbitmq_password,
     rabbitmq_vhost => '/sensu',
     subscriptions => $sensu_client_subscriptions_controller,
+    client_keepalive      => $sensu_client_keepalive,
     plugins       => [
        "puppet:///modules/sensu/plugins/check-ip-connectivity.sh",
        "puppet:///modules/sensu/plugins/check-mem.sh",
@@ -798,7 +800,8 @@ class quickstack::controller_common (
        "puppet:///modules/sensu/plugins/neutron-agent-status.py",
        "puppet:///modules/sensu/plugins/nova-hypervisor-metrics.py",
        "puppet:///modules/sensu/plugins/nova-server-state-metrics.py",
-       "puppet:///modules/sensu/plugins/cpu-pcnt-usage-metrics.rb"
+       "puppet:///modules/sensu/plugins/cpu-pcnt-usage-metrics.rb",
+       "puppet:///modules/sensu/plugins/disk-metrics.rb"
     ]
   }
 
