@@ -27,7 +27,7 @@ class sensu::repo::yum {
 
 
     yumrepo { 'sensu':
-      enabled  => 1,
+      enabled  => 0,
       baseurl  => $url,
       gpgcheck => 0,
       name     => 'sensu',

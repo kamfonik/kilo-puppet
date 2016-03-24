@@ -27,12 +27,19 @@
 require 'sensu-plugin/metric/cli'
 require 'socket'
 
+#
+# CPU Graphite
+#
 class CpuGraphite < Sensu::Plugin::Metric::CLI::Graphite
   option :scheme,
          description: 'Metric naming scheme, text to prepend to metric',
          short: '-s SCHEME',
          long: '--scheme SCHEME',
          default: "#{Socket.gethostname}.cpu"
+  option :threshold,
+         description: 'The threshold of the cpu idle time at which the program will exit with critical state',
+         short: '-t threshold',
+         default: 0
 
   def acquire_proc_stats
     cpu_metrics = %w(user nice system idle iowait irq softirq steal guest)
@@ -71,6 +78,10 @@ class CpuGraphite < Sensu::Plugin::Metric::CLI::Graphite
 
     cpu_metrics.each do |metric|
       metric_val = sprintf('%.02f', (cpu_sample_diff[metric] / cpu_total_diff.to_f) * 100)
+      if metric == 'idle' && metric_val.to_f < config[:threshold].to_f  && metric_val.to_f > 0.0
+        print "critical"
+        critical
+      end
       output "#{config[:scheme]}.#{metric}", metric_val
     end
     ok

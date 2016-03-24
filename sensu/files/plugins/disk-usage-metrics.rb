@@ -94,6 +94,13 @@ class DiskUsageMetrics < Sensu::Plugin::Metric::CLI::Graphite
          long: '--type DISK_TYPE,[DISK_TYPE]',
          proc: proc { |a| a.split(',') }
 
+  option :threshold,
+         description: 'Set a threshold for disk used percentage',
+         short: '-t THRESHOLD',
+         long: '--threshold THRESHOLD',
+         default: '100'
+
+
   def run
     delim = config[:flatten] == true ? '_' : '.'
     if config[:disk_type]
@@ -119,6 +126,11 @@ class DiskUsageMetrics < Sensu::Plugin::Metric::CLI::Graphite
         end
         # Fix subsequent slashes
         mnt = mnt.gsub '/', delim
+
+        if used_p.gsub('%', '').to_i > config[:threshold].to_i
+          print "critical"
+          critical
+        end
         output [config[:scheme], 'disk_usage', mnt, 'used'].join('.'), used.gsub(config[:block_size], '')
         output [config[:scheme], 'disk_usage', mnt, 'avail'].join('.'), avail.gsub(config[:block_size], '')
         output [config[:scheme], 'disk_usage', mnt, 'used_percentage'].join('.'), used_p.gsub('%', '')
