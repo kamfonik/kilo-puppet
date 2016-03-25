@@ -224,7 +224,7 @@ class sensu (
   $sensu_plugin_name           = 'sensu-plugin',
   $sensu_plugin_provider       = undef,
   $sensu_plugin_version        = 'present',
-  $install_repo                = true,
+  $install_repo                = false,
   $repo                        = 'main',
   $repo_source                 = undef,
   $repo_key_id                 = '8911D8FF37778F24B4E726A218609E3D7580C77F',
