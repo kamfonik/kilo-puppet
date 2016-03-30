@@ -224,7 +224,7 @@ class sensu (
   $sensu_plugin_name           = 'sensu-plugin',
   $sensu_plugin_provider       = undef,
   $sensu_plugin_version        = 'present',
-  $install_repo                = true,
+  $install_repo                = false,
   $repo                        = 'main',
   $repo_source                 = undef,
   $repo_key_id                 = '8911D8FF37778F24B4E726A218609E3D7580C77F',
@@ -256,7 +256,6 @@ class sensu (
   $subscriptions               = [],
   $client_bind                 = '127.0.0.1',
   $client_port                 = '3030',
-  $client_address              = $::ipaddress,
   $client_name                 = $::fqdn,
   $client_custom               = {},
   $client_keepalive            = {},
@@ -272,6 +271,12 @@ class sensu (
   $dashboard                   = false,
   $init_stop_max_wait          = 10,
 ){
+
+  if $environment == 'production' {
+    $client_address = $::ipaddress_enp130s0f0
+  } else {
+    $client_address = $::ipaddress_eth2
+  }
 
   validate_bool($client, $server, $api, $install_repo, $purge_config, $safe_mode, $manage_services, $rabbitmq_reconnect_on_error, $redis_reconnect_on_error)
 
