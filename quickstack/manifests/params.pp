@@ -379,6 +379,9 @@ class quickstack::params (
   $backups_script_local_name,
   $backups_local_hour,
   $backups_local_min, 
+  $backups_keep_days,
+
+
   $elasticsearch_host,
 
   # Allow instance resize
@@ -387,5 +390,6 @@ class quickstack::params (
 
   # repo server
   $repo_server,
+
 ) {
 }

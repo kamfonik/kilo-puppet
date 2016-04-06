@@ -180,6 +180,7 @@ class quickstack::controller_common (
   $backpus_sudoers_d		     = $quickstack::params::backups_sudoers_d,
   $backups_hour                  = $quickstack::params::backups_local_hour,
   $backups_min                   = $quickstack::params::backups_local_min, 
+  $backups_keep_days	    	 = $quickstack::params::backups_keep_days,
   $allow_resize_to_same_host     = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
@@ -842,6 +843,7 @@ class quickstack::controller_common (
     cron_email     => $backups_email,
     cron_hour      => $backups_hour,
     cron_min       => $backups_min,
+    keep_days      => $backups_keep_days,
   }
   
   class { 'filebeat':

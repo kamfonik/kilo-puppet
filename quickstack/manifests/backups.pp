@@ -9,6 +9,7 @@ class backups (
         $cron_email     = $quickstack::params::backups_email,
         $cron_hour	= $quickstack::params::backups_hour,
         $cron_min 	= $quickstack::params::backups_min,
+        $keep_days      = $quickstack::params::backups_keep_days,
 ) {
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
@@ -78,7 +79,7 @@ class backups (
     }
 
     cron { 'backup_cron':
-      command     => "${script_dest} 2>&1 >>${log_file} | tee -a ${log_file}", 
+      command     => "${script_dest} -d ${backups_dir} -k ${keep_days} 2>&1 >>${log_file} | tee -a ${log_file}", 
       user        => 'root',
       environment => "MAILTO=${cron_email}",
       hour        => $cron_hour,
