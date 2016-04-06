@@ -78,6 +78,14 @@ class backups (
         ensure => present,
     }
 
+    file { 'logrotate':
+        ensure => file,
+        path  => '/etc/logrotate.d/backups'
+        owner => 'root',
+        group => 'root',
+        content => "${log_file} {\n\tsize 100K\n\tmissingok\n\trotate 6\n\tcompress\n}\n",
+    } 
+
     cron { 'backup_cron':
       command     => "${script_dest} -d ${backups_dir} -k ${keep_days} 2>&1 >>${log_file} | tee -a ${log_file}", 
       user        => 'root',
