@@ -103,6 +103,8 @@ class quickstack::compute_common (
   $backups_sudoers_d		 = $quickstack::params::backups_sudoers_d,
   $backups_hour                  = $quickstack::params::backups_local_hour,
   $backups_min                   = $quickstack::params::backups_local_min, 
+  $allow_resize_to_same_host    = $quickstack::params::allow_resize,
+  $allow_migrate_to_same_host   = $quickstack::params::allow_migrate,
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl") {
@@ -245,7 +247,9 @@ class quickstack::compute_common (
   }
 
   nova_config {
-    'DEFAULT/cinder_catalog_info': value => $cinder_catalog_info;
+    'DEFAULT/cinder_catalog_info':        value => $cinder_catalog_info;
+    'DEFAULT/allow_resize_to_same_host':  value => $allow_resize_to_same_host;
+    'DEFAULT/allow_migrate_to_same_host': value => $allow_migrate_to_same_host;
   }
 
   if $rabbit_hosts {

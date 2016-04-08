@@ -181,6 +181,8 @@ class quickstack::controller_common (
   $backpus_sudoers_d		 = $quickstack::params::backups_sudoers_d,
   $backups_hour                  = $quickstack::params::backups_local_hour,
   $backups_min                   = $quickstack::params::backups_local_min, 
+  $allow_resize_to_same_host     = $quickstack::params::allow_resize,
+  $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -446,7 +448,9 @@ class quickstack::controller_common (
   }
 
   nova_config {
-    'DEFAULT/default_floating_pool': value => $nova_default_floating_pool;
+    'DEFAULT/default_floating_pool':      value => $nova_default_floating_pool;
+    'DEFAULT/allow_resize_to_same_host':  value => $allow_resize_to_same_host;
+    'DEFAULT/allow_migrate_to_same_host': value => $allow_migrate_to_same_host;
   }
 
   if str2bool_i("$neutron") {
