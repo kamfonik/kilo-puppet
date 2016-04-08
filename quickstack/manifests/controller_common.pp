@@ -87,6 +87,9 @@ class quickstack::controller_common (
   $cinder_admin_url              = $quickstack::params::cinder_admin_url,
   $cinder_priv_url               = $quickstack::params::cinder_priv_url,
   $cinder_pub_url                = $quickstack::params::cinder_pub_url,
+  $swift_admin_url               = $quickstack::params::swift_admin_url,
+  $swift_priv_url                = $quickstack::params::swift_priv_url,
+  $swift_pub_url                 = $quickstack::params::swift_pub_url,
   #
 
   $glance_db_password            = $quickstack::params::glance_db_password,
@@ -147,7 +150,8 @@ class quickstack::controller_common (
   $sensu_rabbitmq_host           = $quickstack::params::sensu_rabbitmq_host,
   $sensu_rabbitmq_user           = $quickstack::params::sensu_rabbitmq_user,
   $sensu_rabbitmq_password       = $quickstack::params::sensu_rabbitmq_password,
-  $sensu_client_subscriptions_controller   = ['moc-sensu','openstack-api','openstack-metrics'],
+  $sensu_client_subscriptions_controller   = 'moc-sensu',
+  $sensu_client_keepalive       = { "thresholds" => { "warning" => 60, "critical" => 300 }, "handlers" => ["node-email"], "refresh" => 3600 },
   $ceph_key                      = $quickstack::params::ceph_key,
   $use_ssl_endpoints             = $quickstack::params::use_ssl_endpoints,
   $neutron_admin_password        = $quickstack::params::neutron_user_password,
@@ -167,6 +171,16 @@ class quickstack::controller_common (
   $public_net                    = $quickstack::params::public_net,
   $private_net                   = $quickstack::params::private_net,
   $ntp_public_servers            = $quickstack::params::ntp_public_servers,
+  $backups_user                  = $quickstack::params::backups_user,
+  $backups_script_src            = $quickstack::params::backups_script_controller,
+  $backups_script_local		 = $quickstack::params::backups_script_local_name,
+  $backups_dir                   = $quickstack::params::backups_directory,
+  $backups_log                   = $quickstack::params::backups_log,
+  $backups_email                 = $quickstack::params::backups_email,
+  $backups_ssh_key               = $quickstack::params::backups_ssh_key,
+  $backpus_sudoers_d		 = $quickstack::params::backups_sudoers_d,
+  $backups_hour                  = $quickstack::params::backups_local_hour,
+  $backups_min                   = $quickstack::params::backups_local_min, 
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -374,9 +388,9 @@ class quickstack::controller_common (
 
   class { 'swift::keystone::auth':
     password         => $swift_admin_password,
-    public_address   => $controller_pub_host,
-    internal_address => $controller_priv_host,
-    admin_address    => $controller_admin_host
+    public_address   => $swift_pub_url,
+    internal_address => $swift_priv_url,
+    admin_address    => $swift_admin_url
   }
 
   class {'quickstack::glance':
@@ -768,6 +782,7 @@ class quickstack::controller_common (
     rabbitmq_password => $sensu_rabbitmq_password,
     rabbitmq_vhost => '/sensu',
     subscriptions => $sensu_client_subscriptions_controller,
+    client_keepalive      => $sensu_client_keepalive,
     plugins       => [
        "puppet:///modules/sensu/plugins/check-ip-connectivity.sh",
        "puppet:///modules/sensu/plugins/check-mem.sh",
@@ -785,7 +800,8 @@ class quickstack::controller_common (
        "puppet:///modules/sensu/plugins/neutron-agent-status.py",
        "puppet:///modules/sensu/plugins/nova-hypervisor-metrics.py",
        "puppet:///modules/sensu/plugins/nova-server-state-metrics.py",
-       "puppet:///modules/sensu/plugins/cpu-pcnt-usage-metrics.rb"
+       "puppet:///modules/sensu/plugins/cpu-pcnt-usage-metrics.rb",
+       "puppet:///modules/sensu/plugins/disk-metrics.rb"
     ]
   }
 
@@ -806,10 +822,19 @@ class quickstack::controller_common (
 
   # Create semodule for keystone-all access to fernet keys
   class {'moc_openstack::keystone_all_semodule':}
-
- # Create entries in /etc/hosts
- class {'hosts':
-   before  => Class['quickstack::amqp::server', 'quickstack::db::mysql'],
- }
+ 
+  # Installs scripts for automated backups
+  class {'backups':
+    user           => $backups_user, 
+    script_src     => $backups_script_src,
+    script_local   => $backups_script_local,
+    backups_dir    => $backups_dir,
+    log_file       => $backups_log,
+    ssh_key        => $backups_ssh_key,
+    sudoers_d      => $backups_sudoers_d,
+    cron_email     => $backups_email,
+    cron_hour      => $backups_hour,
+    cron_min       => $backups_min,
+  }
 
 }

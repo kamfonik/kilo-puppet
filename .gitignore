@@ -8,3 +8,4 @@
 
 # ignore directories
 moc_openstack/files/certs
+quickstack/files/backup_scripts/

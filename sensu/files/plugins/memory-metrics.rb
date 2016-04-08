@@ -35,6 +35,13 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
          long: '--scheme SCHEME',
          default: "#{Socket.gethostname}.memory"
 
+  option :threshold,
+         description: 'Threshold for memory usage percentage',
+         short: '-t THESHOLD',
+         long: '--threshold THRESHOLD',
+         default: "100"
+
+
   def run
     # Metrics borrowed from hoardd: https://github.com/coredump/hoardd
 
@@ -61,6 +68,13 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
 
     mem['swapUsed'] = mem['swapTotal'] - mem['swapFree']
     mem['used'] = mem['total'] - mem['free']
+    memory_used = (100.0 * mem['used']) / mem['total']
+
+    if config[:threshold].to_f < memory_used
+      print "critical"
+      critical
+    end
+
     mem['usedWOBuffersCaches'] = mem['used'] - (mem['buffers'] + mem['cached'])
     mem['freeWOBuffersCaches'] = mem['free'] + (mem['buffers'] + mem['cached'])
     mem['swapUsedPercentage'] = 100 * mem['swapUsed'] / mem['swapTotal'] if mem['swapTotal'] > 0
