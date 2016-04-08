@@ -276,6 +276,9 @@ class quickstack::params (
   $horizon_app_links,
   $support_profile,
 
+  # Heat
+  $heat_auth_encrypt_key,
+
   # provider network settings
   $provider_vlan_auto_create,
   $provider_vlan_auto_trunk,
