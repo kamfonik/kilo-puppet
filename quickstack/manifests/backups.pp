@@ -4,6 +4,7 @@ class backups (
         $script_local   = $quickstack::params::backups_script_local_name,
 	$backups_dir    = $quickstack::params::backups_directory,
         $log_file       = $quickstack::params::backups_log,
+        $verbose        = $quickstack::params::backups_verbose,
         $ssh_key        = $quickstack::params::backups_ssh_key,
         $sudoers_d      = $quickstack::params::backups_sudoers_d,
         $cron_email     = $quickstack::params::backups_email,
@@ -13,6 +14,12 @@ class backups (
 ) {
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
+    
+    $v_flag = ""  
+  
+    if $verbose { 
+        $v_flag = "-v"
+    }
 
     package { 'rsync':
       ensure => installed,
@@ -87,7 +94,7 @@ class backups (
     } 
 
     cron { 'backup_cron':
-      command     => "${script_dest} -d ${backups_dir} -k ${keep_days} 2>&1 >>${log_file} | tee -a ${log_file}", 
+      command     => "${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}", 
       user        => 'root',
       environment => "MAILTO=${cron_email}",
       hour        => $cron_hour,

@@ -371,6 +371,7 @@ class quickstack::params (
   $backups_user,
   $backups_directory,
   $backups_log,
+  $backups_verbose,
   $backups_email,
   $backups_ssh_key,
   $backups_sudoers_d,
