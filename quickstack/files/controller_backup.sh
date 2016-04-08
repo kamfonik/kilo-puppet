@@ -98,6 +98,7 @@ mkdir -p "${BKP_DIR}"
 
 # rsync fails unless these already exist...
 mkdir -p "${BKP_DIR}/var/lib/"
+mkdir -p "${BKP_DIR}/var/log/"
 mkdir -p "${BKP_DIR}/etc/"
 
 # Back up the mysql database
