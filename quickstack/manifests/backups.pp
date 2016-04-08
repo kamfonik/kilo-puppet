@@ -15,11 +15,12 @@ class backups (
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
     
-    $v_flag = ""  
-  
     if $verbose { 
         $v_flag = "-v"
     }
+    else {
+        $v_flag = ""
+    } 
 
     package { 'rsync':
       ensure => installed,
@@ -87,7 +88,7 @@ class backups (
 
     file { 'logrotate':
         ensure => file,
-        path  => '/etc/logrotate.d/backups'
+        path  => '/etc/logrotate.d/backups',
         owner => 'root',
         group => 'root',
         content => "${log_file} {\n\tsize 100K\n\tmissingok\n\trotate 6\n\tcompress\n}\n",
