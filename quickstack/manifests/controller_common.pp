@@ -101,8 +101,7 @@ class quickstack::controller_common (
   $heat_cloudwatch               = $quickstack::params::heat_cloudwatch,
   $heat_db_password              = $quickstack::params::heat_db_password,
   $heat_user_password            = $quickstack::params::heat_user_password,
-  #Was breaking puppet
-  #$heat_auth_encrypt_key,
+  $heat_auth_encrypt_key         = $quickstack::params::heat_auth_encrypt_key,
   $horizon_secret_key            = $quickstack::params::horizon_secret_key,
   $keystone_admin_token          = $quickstack::params::keystone_admin_token,
   $keystone_db_password          = $quickstack::params::keystone_db_password,
@@ -642,26 +641,26 @@ class quickstack::controller_common (
     }
   }
 
-#  class { 'quickstack::heat_controller':
-#    auth_encryption_key         => $heat_auth_encrypt_key,
-#    heat_cfn                    => $heat_cfn,
-#    heat_cloudwatch             => $heat_cloudwatch,
-#    heat_user_password          => $heat_user_password,
-#    heat_db_password            => $heat_db_password,
-#    controller_admin_host       => $controller_admin_host,
-#    controller_priv_host        => $controller_priv_host,
-#    controller_pub_host         => $controller_pub_host,
-#    mysql_host                  => $mysql_host,
-#    mysql_ca                    => $mysql_ca,
-#    ssl                         => $ssl,
-#    amqp_provider               => $amqp_provider,
-#    amqp_host                   => $amqp_host,
-#    amqp_port                   => $amqp_port,
-#    qpid_protocol               => $qpid_protocol,
-#    amqp_username               => $amqp_username,
-#    amqp_password               => $amqp_password,
-#    verbose                     => $verbose,
-#  }
+  class { 'quickstack::heat_controller':
+    auth_encryption_key         => $heat_auth_encrypt_key,
+    heat_cfn                    => $heat_cfn,
+    heat_cloudwatch             => $heat_cloudwatch,
+    heat_user_password          => $heat_user_password,
+    heat_db_password            => $heat_db_password,
+    controller_admin_host       => $controller_admin_host,
+    controller_priv_host        => $controller_priv_host,
+    controller_pub_host         => $controller_pub_host,
+    mysql_host                  => $mysql_host,
+    mysql_ca                    => $mysql_ca,
+    ssl                         => false, # Disable SSL for message queue
+    amqp_provider               => $amqp_provider,
+    amqp_host                   => $amqp_host,
+    amqp_port                   => $amqp_port,
+    qpid_protocol               => $qpid_protocol,
+    amqp_username               => $amqp_username,
+    amqp_password               => $amqp_password,
+    verbose                     => $verbose,
+  }
 
   # horizon packages
   package {'python-memcached':

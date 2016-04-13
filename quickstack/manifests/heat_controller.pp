@@ -41,7 +41,8 @@ class quickstack::heat_controller(
   class { '::heat':
       keystone_host     => $controller_priv_host,
       keystone_password => $heat_user_password,
-      auth_uri          => "http://${controller_priv_host}:35357/v2.0",
+      auth_uri          => "https://${controller_priv_host}:5000/v2.0",
+      identity_uri      => "https://${controller_priv_host}:35357",
       rpc_backend       => amqp_backend('heat', $amqp_provider),
       qpid_hostname     => $amqp_host,
       qpid_port         => $amqp_port,
