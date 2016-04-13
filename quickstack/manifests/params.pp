@@ -376,5 +376,9 @@ class quickstack::params (
   $backups_script_local_name,
   $backups_local_hour,
   $backups_local_min, 
+
+  # Allow instance resize
+  $allow_resize,
+  $allow_migrate,
 ) {
 }
