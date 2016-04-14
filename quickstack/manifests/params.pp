@@ -383,5 +383,8 @@ class quickstack::params (
   # Allow instance resize
   $allow_resize,
   $allow_migrate,
+
+  # repo server
+  $repo_server,
 ) {
 }
