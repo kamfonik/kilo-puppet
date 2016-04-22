@@ -1,0 +1,53 @@
+fileoncotrollersonly=<%= scope.function_hiera(['quickstack::params::surcntfile']) %>
+net1=<%= scope.function_hiera(['quickstack::params::surnet1']) %>
+net2=<%= scope.function_hiera(['quickstack::params::surnet2']) %>
+net3=<%= scope.function_hiera(['quickstack::params::surnet3']) %>
+net4=<%= scope.function_hiera(['quickstack::params::surnet4']) %>
+
+[ -f $fileoncotrollersonly ] && QNAME=INPUT || QNAME=FORWARD
+
+iptables -L $QNAME -nv --line-numbers | grep NFQUEUE > /dev/null || iptables -I $QNAME -m mark ! --mark 0x1/0x1 -j NFQUEUE
+iptables -L $QNAME -nv --line-numbers | grep $net4 > /dev/null || iptables -I $QNAME -s $net4 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net3 > /dev/null || iptables -I $QNAME -s $net3 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net2 > /dev/null || iptables -I $QNAME -s $net2 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net1 > /dev/null || iptables -I $QNAME -s $net1 -j ACCEPT
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net1 | cut -f 1 -d " "|xargs -n1|sort -r`
+if [ "$lnum" != "1" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 1 -s $net1 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net2 | cut -f 1 -d " "|xargs -n1|sort -r`
+if [ "$lnum" != "2" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 2 -s $net2 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net3 | cut -f 1 -d " "|xargs -n1|sort -r`
+if [ "$lnum" != "3" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 3 -s $net3 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net4 | cut -f 1 -d " "|xargs -n1|sort -r`
+if [ "$lnum" != "4" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 4 -s $net4 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep NFQUEUE | cut -f 1 -d " "|xargs -n1|sort -r`
+if [ "$lnum" != "5" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 5 -m mark ! --mark 0x1/0x1 -j NFQUEUE
+fi

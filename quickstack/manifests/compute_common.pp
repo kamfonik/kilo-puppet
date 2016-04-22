@@ -432,5 +432,7 @@ class quickstack::compute_common (
     repo_server => $repo_server,
     randomwait => 180,
   }
+  class {'moc_openstack::suricata':
+  }
 
 }
