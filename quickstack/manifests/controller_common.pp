@@ -788,7 +788,6 @@ class quickstack::controller_common (
     subscriptions => $sensu_client_subscriptions_controller,
     client_keepalive      => $sensu_client_keepalive,
     plugins       => [
-       "puppet:///modules/sensu/plugins/check-ip-connectivity.sh",
        "puppet:///modules/sensu/plugins/check-mem.sh",
        "puppet:///modules/sensu/plugins/cpu-metrics.rb",
        "puppet:///modules/sensu/plugins/disk-usage-metrics.rb",
