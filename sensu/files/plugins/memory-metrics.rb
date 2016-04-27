@@ -68,16 +68,20 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
 
     mem['swapUsed'] = mem['swapTotal'] - mem['swapFree']
     mem['used'] = mem['total'] - mem['free']
-    memory_used = (100.0 * mem['used']) / mem['total']
+    mem['usedWOBuffersCaches'] = mem['used'] - (mem['buffers'] + mem['cached'])
+    mem['freeWOBuffersCaches'] = mem['free'] + (mem['buffers'] + mem['cached'])
+    mem['swapUsedPercentage'] = 100 * mem['swapUsed'] / mem['swapTotal'] if mem['swapTotal'] > 0
+
+    memory_used = (100.0 * mem['freeWOBuffersCaches']) / mem['total']
 
     if config[:threshold].to_f < memory_used
       print "critical"
       critical
     end
 
-    mem['usedWOBuffersCaches'] = mem['used'] - (mem['buffers'] + mem['cached'])
-    mem['freeWOBuffersCaches'] = mem['free'] + (mem['buffers'] + mem['cached'])
-    mem['swapUsedPercentage'] = 100 * mem['swapUsed'] / mem['swapTotal'] if mem['swapTotal'] > 0
+
+
+
 
     mem
   end
