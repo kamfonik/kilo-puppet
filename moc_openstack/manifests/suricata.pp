@@ -28,13 +28,13 @@ class moc_openstack::suricata {
     require => Package['suricata'],
     source => 'puppet:///modules/moc_openstack/suricata.yaml',
   }
-    file { '/etc/scripts':
+  file { '/etc/scripts':
     ensure => 'directory',
     owner => 'root',
     group => 'root',
     mode  => '0750',
   }
-    file { 'surnfq':
+  file { 'surnfq':
     ensure => 'file',
     content => template('moc_openstack/surnfq.erb'),
     path => '/etc/scripts/surnfq',
@@ -42,7 +42,7 @@ class moc_openstack::suricata {
     group => 'root',
     mode  => '0755',
   }
-    file { 'surupd':
+  file { 'surupd':
     ensure => 'file',
     content => template('moc_openstack/surupd.erb'),
     path => '/etc/scripts/surupd',
@@ -51,18 +51,19 @@ class moc_openstack::suricata {
     mode  => '0755',
   }
 
-    file { '/etc/cron.daily/updaterules':
+  file { '/etc/cron.daily/updaterules':
     ensure => 'link',
     target => '/etc/scripts/surupd',
   }
 
-    file { '/etc/cron.d/surnfq.cron':
+  file { '/etc/cron.d/surnfq.cron':
     ensure => present,
     owner => 'root',
     group => 'root',
     mode  => '0640',
     content => "SHELL=/bin/bash\nPATH=/sbin:/bin:/usr/sbin:/usr/bin\nMAILTO=root\n* * * * * root /etc/scripts/surnfq\n",
-  }
+    require   => Package['suricata'],
+   }
   exec {'updaterules':
     command => "/etc/scripts/surupd",
   }
