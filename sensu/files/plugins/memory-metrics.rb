@@ -77,7 +77,7 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
      header = 'ps -eo user,pid,%mem,command --sort=%mem| head -n1'
      output = 'ls'
     if config[:threshold].to_f < memory_used
-      print "critical"
+      print "critical\n"
       system header
       system top5
       critical
