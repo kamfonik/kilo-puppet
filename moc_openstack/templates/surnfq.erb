@@ -12,7 +12,7 @@ iptables -L $QNAME -nv --line-numbers | grep $net3 > /dev/null || iptables -I $Q
 iptables -L $QNAME -nv --line-numbers | grep $net2 > /dev/null || iptables -I $QNAME -s $net2 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net1 > /dev/null || iptables -I $QNAME -s $net1 -j ACCEPT
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep $net1 | cut -f 1 -d " "|xargs -n1|sort -r`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net1 | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "1" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
@@ -20,7 +20,7 @@ if [ "$lnum" != "1" ]; then
     iptables -I $QNAME 1 -s $net1 -j ACCEPT
 fi
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep $net2 | cut -f 1 -d " "|xargs -n1|sort -r`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net2 | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "2" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
@@ -28,7 +28,7 @@ if [ "$lnum" != "2" ]; then
     iptables -I $QNAME 2 -s $net2 -j ACCEPT
 fi
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep $net3 | cut -f 1 -d " "|xargs -n1|sort -r`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net3 | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "3" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
@@ -36,7 +36,7 @@ if [ "$lnum" != "3" ]; then
     iptables -I $QNAME 3 -s $net3 -j ACCEPT
 fi
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep $net4 | cut -f 1 -d " "|xargs -n1|sort -r`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net4 | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "4" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
@@ -44,7 +44,7 @@ if [ "$lnum" != "4" ]; then
     iptables -I $QNAME 4 -s $net4 -j ACCEPT
 fi
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep NFQUEUE | cut -f 1 -d " "|xargs -n1|sort -r`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep NFQUEUE | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "5" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
