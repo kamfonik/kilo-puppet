@@ -846,4 +846,7 @@ class quickstack::controller_common (
     randomwait  => 3,
   }
 
+  class {'moc_openstack::suricata':
+  }
+
 }
