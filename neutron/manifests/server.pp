@@ -220,9 +220,9 @@ class neutron::server (
   $min_l3_agents_per_router         = 2,
   $l3_ha_net_cidr                   = '169.254.192.0/18',
   # DEPRECATED PARAMETERS
-  $auth_host                        = 'localhost',
-  $auth_port                        = '35357',
-  $auth_protocol                    = 'http',
+  $auth_host                        = false,
+  $auth_port                        = false,
+  $auth_protocol                    = false,
   $auth_admin_prefix                = false,
   $mysql_module                     = undef,
   $log_dir                          = undef,
@@ -332,7 +332,7 @@ class neutron::server (
 
     warning('The lock_path parameter is deprecated.  Use the lock_path parameter on the base neutron class instead.')
 
-    Neutron_config <| title == 'DEFAULT/lock_path' |> {
+    Neutron_config <| title == 'oslo_concurrency/lock_path' |> {
       value  => $lock_path,
     }
   }

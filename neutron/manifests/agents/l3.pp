@@ -108,7 +108,7 @@ class neutron::agents::l3 (
   $manage_service                   = true,
   $debug                            = false,
   $external_network_bridge          = 'br-ex',
-  $use_namespaces                   = true,
+  $use_namespaces                   = undef,
   $interface_driver                 = 'neutron.agent.linux.interface.OVSInterfaceDriver',
   $router_id                        = undef,
   $gateway_external_network_id      = undef,
@@ -149,7 +149,6 @@ class neutron::agents::l3 (
   neutron_l3_agent_config {
     'DEFAULT/debug':                            value => $debug;
     'DEFAULT/external_network_bridge':          value => $external_network_bridge;
-    'DEFAULT/use_namespaces':                   value => $use_namespaces;
     'DEFAULT/interface_driver':                 value => $interface_driver;
     'DEFAULT/router_id':                        value => $router_id;
     'DEFAULT/gateway_external_network_id':      value => $gateway_external_network_id;
@@ -161,6 +160,7 @@ class neutron::agents::l3 (
     'DEFAULT/enable_metadata_proxy':            value => $enable_metadata_proxy;
     'DEFAULT/router_delete_namespaces':         value => $router_delete_namespaces;
     'DEFAULT/agent_mode':                       value => $agent_mode;
+    'DEFAULT/use_namespaces':                   ensure => absent;
   }
 
   if $network_device_mtu {

@@ -1,4 +1,6 @@
 class quickstack::pacemaker::neutron (
+  $auth_uri                   = 'http://localhost:5000/v2.0',
+  $identity_uri               = 'http://localhost:35357/v2.0',
   $allow_overlapping_ips      = true,
   $core_plugin                = 'neutron.plugins.ml2.plugin.Ml2Plugin',
   $cisco_vswitch_plugin       = 'neutron.plugins.cisco.n1kv.n1kv_neutron_plugin.N1kvNeutronPluginV2',
@@ -162,6 +164,8 @@ class quickstack::pacemaker::neutron (
     class { 'quickstack::neutron::all':
       allow_overlapping_ips              => $allow_overlapping_ips,
       auth_host                          => map_params("keystone_public_vip"),
+      auth_uri                           => $auth_uri,
+      identity_uri                       => $identity_uri,
       database_max_retries               => '-1',
       dhcp_agents_per_network            => $_dhcp_agents_per_network,
       cisco_vswitch_plugin               => $cisco_vswitch_plugin,

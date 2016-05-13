@@ -261,6 +261,8 @@ class cinder (
   $default_availability_zone   = false,
   $enable_v1_api               = true,
   $enable_v2_api               = true,
+  $auth_uri                    = 'http://localhost:5000/',
+  $identity_uri                = 'http://localhost:35357/',
   # DEPRECATED PARAMETERS
   $mysql_module                = undef,
 ) {
@@ -330,7 +332,7 @@ class cinder (
       'oslo_messaging_rabbit/rabbit_virtual_host': value => $rabbit_virtual_host;
       'oslo_messaging_rabbit/rabbit_use_ssl':      value => $rabbit_use_ssl;
       'DEFAULT/control_exchange':    value => $control_exchange;
-      'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
+      'oslo_messaging_rabbit/amqp_durable_queues': value => $amqp_durable_queues;
     }
 
     if $rabbit_hosts {
@@ -383,20 +385,20 @@ class cinder (
     }
 
     cinder_config {
-      'DEFAULT/qpid_hostname':               value => $qpid_hostname;
-      'DEFAULT/qpid_port':                   value => $qpid_port;
-      'DEFAULT/qpid_username':               value => $qpid_username;
-      'DEFAULT/qpid_password':               value => $qpid_password, secret => true;
-      'DEFAULT/qpid_reconnect':              value => $qpid_reconnect;
-      'DEFAULT/qpid_reconnect_timeout':      value => $qpid_reconnect_timeout;
-      'DEFAULT/qpid_reconnect_limit':        value => $qpid_reconnect_limit;
-      'DEFAULT/qpid_reconnect_interval_min': value => $qpid_reconnect_interval_min;
-      'DEFAULT/qpid_reconnect_interval_max': value => $qpid_reconnect_interval_max;
-      'DEFAULT/qpid_reconnect_interval':     value => $qpid_reconnect_interval;
-      'DEFAULT/qpid_heartbeat':              value => $qpid_heartbeat;
-      'DEFAULT/qpid_protocol':               value => $qpid_protocol;
-      'DEFAULT/qpid_tcp_nodelay':            value => $qpid_tcp_nodelay;
-      'DEFAULT/amqp_durable_queues':         value => $amqp_durable_queues;
+      'DEFAULT/qpid_hostname':                     value => $qpid_hostname;
+      'DEFAULT/qpid_port':                         value => $qpid_port;
+      'DEFAULT/qpid_username':                     value => $qpid_username;
+      'DEFAULT/qpid_password':                     value => $qpid_password, secret => true;
+      'DEFAULT/qpid_reconnect':                    value => $qpid_reconnect;
+      'DEFAULT/qpid_reconnect_timeout':            value => $qpid_reconnect_timeout;
+      'DEFAULT/qpid_reconnect_limit':              value => $qpid_reconnect_limit;
+      'DEFAULT/qpid_reconnect_interval_min':       value => $qpid_reconnect_interval_min;
+      'DEFAULT/qpid_reconnect_interval_max':       value => $qpid_reconnect_interval_max;
+      'DEFAULT/qpid_reconnect_interval':           value => $qpid_reconnect_interval;
+      'DEFAULT/qpid_heartbeat':                    value => $qpid_heartbeat;
+      'DEFAULT/qpid_protocol':                     value => $qpid_protocol;
+      'DEFAULT/qpid_tcp_nodelay':                  value => $qpid_tcp_nodelay;
+      'oslo_messaging_rabbit/amqp_durable_queues': value => $amqp_durable_queues;
     }
 
     if is_array($qpid_sasl_mechanisms) {
@@ -480,7 +482,8 @@ class cinder (
     cinder_config {
       'DEFAULT/ssl_cert_file' : value => $cert_file;
       'DEFAULT/ssl_key_file' :  value => $key_file;
-      'keystone_authtoken/auth_protocol': value => 'https';
+      'keystone_authtoken/auth_uri': value => $auth_uri;
+      'keystone_authtoken/identity_uri': value => $identity_uri;
       'keystone_authtoken/cafile': value => $ca_file;
     }
 

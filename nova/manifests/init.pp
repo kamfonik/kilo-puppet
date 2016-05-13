@@ -464,8 +464,8 @@ class nova(
 
   if $use_ssl {
     nova_config {
-      'cinder/endpoint_template':    value => "${auth_protocol}://${controller_pub_host}:8776/v1/%(project_id)s";
-      'cinder/ca_certificates_file': value => $ca_file;
+      'cinder/endpoint_template':    value => "${auth_protocol}://${controller_pub_host}:8776/v2/%(project_id)s";
+      'cinder/cafile': value => $ca_file;
       'keystone_authtoken/cafile':   value => $ca_file;
       'ssl/enable':                  value => true;
       'ssl/ca_file':                 value => $ca_file;
@@ -491,7 +491,7 @@ class nova(
       'oslo_messaging_rabbit/rabbit_userid':       value => $rabbit_userid;
       'oslo_messaging_rabbit/rabbit_virtual_host': value => $rabbit_virtual_host;
       'oslo_messaging_rabbit/rabbit_use_ssl':      value => $rabbit_use_ssl;
-      'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
+      'oslo_messaging_rabbit/amqp_durable_queues': value => $amqp_durable_queues;
     }
 
     if $rabbit_use_ssl {
@@ -633,10 +633,10 @@ class nova(
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':          value => $state_path;
-    'DEFAULT/lock_path':           value => $lock_path;
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
     'DEFAULT/report_interval':     value => $report_interval;
+    'oslo_concurrency/lock_path':  value => $lock_path;
   }
 
   if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {

@@ -216,6 +216,8 @@ class openstack::all (
   $neutron_db_user         = 'neutron',
   $neutron_db_name         = 'neutron',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
+  $auth_uri                = 'http://localhost:5000/v2.0',
+  $identity_uri            = 'http://localhost:35357/v2.0',
   $enable_neutron_server   = true,
   $ovs_enable_tunneling    = true,
   $ovs_local_ip            = false,
@@ -474,6 +476,8 @@ class openstack::all (
       enable_l3_agent       => $enable_l3_agent,
       enable_metadata_agent => $enable_metadata_agent,
       auth_url              => $neutron_auth_url,
+      auth_uri              => $auth_uri,
+      identity_uri          => $identity_uri,
       user_password         => $neutron_user_password,
       shared_secret         => $metadata_shared_secret,
       # Keystone

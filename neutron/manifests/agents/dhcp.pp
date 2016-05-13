@@ -76,7 +76,7 @@ class neutron::agents::dhcp (
   $dhcp_domain            = 'openstacklocal',
   $dhcp_driver            = 'neutron.agent.linux.dhcp.Dnsmasq',
   $root_helper            = 'sudo neutron-rootwrap /etc/neutron/rootwrap.conf',
-  $use_namespaces         = true,
+  $use_namespaces         = undef,
   $dnsmasq_config_file    = undef,
   $dhcp_delete_namespaces = false,
   $enable_isolated_metadata = false,
@@ -120,9 +120,9 @@ class neutron::agents::dhcp (
     'DEFAULT/interface_driver':       value => $interface_driver;
     'DEFAULT/dhcp_domain':            value => $dhcp_domain;
     'DEFAULT/dhcp_driver':            value => $dhcp_driver;
-    'DEFAULT/use_namespaces':         value => $use_namespaces;
     'DEFAULT/root_helper':            value => $root_helper;
     'DEFAULT/dhcp_delete_namespaces': value => $dhcp_delete_namespaces;
+    'DEFAULT/use_namespaces':         ensure => absent;
   }
 
   if $dnsmasq_config_file {

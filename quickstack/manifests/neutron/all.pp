@@ -3,6 +3,8 @@ class quickstack::neutron::all (
   $auth_host                     = 'localhost',
   $auth_tenant                   = 'services',
   $auth_user                     = 'neutron',
+  $auth_uri                      = 'http://localhost:5000/v2.0',
+  $identity_uri                  = 'http://localhost:35357/v2.0',
   $dhcp_agents_per_network       = '1',
   $cisco_nexus_plugin            = '',
   $cisco_vswitch_plugin          = '',
@@ -157,10 +159,11 @@ class quickstack::neutron::all (
   anchor {'quickstack-neutron-server-first':}
   ->
   class { '::neutron::server':
-    auth_host                => $auth_host,
     auth_password            => $neutron_user_password,
     auth_tenant              => $auth_tenant,
     auth_user                => $auth_user,
+    auth_uri                 => $auth_uri,
+    identity_uri             => $identity_uri,
     database_connection      => $sql_connection,
     database_max_retries     => $database_max_retries,
     enabled                  => str2bool_i("$enabled"),

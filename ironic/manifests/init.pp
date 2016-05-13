@@ -329,8 +329,8 @@ class ironic (
       'oslo_messaging_rabbit/rabbit_password':     value => $rabbit_password, secret => true;
       'oslo_messaging_rabbit/rabbit_virtual_host': value => $rabbit_virtual_host;
       'oslo_messaging_rabbit/rabbit_use_ssl':      value => $rabbit_use_ssl;
-      'DEFAULT/control_exchange':    value => $control_exchange;
-      'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
+      'DEFAULT/control_exchange':                  value => $control_exchange;
+      'oslo_messaging_rabbit/amqp_durable_queues': value => $amqp_durable_queues;
     }
 
     if $rabbit_hosts {

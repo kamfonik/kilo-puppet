@@ -107,7 +107,7 @@ class glance::notify::rabbitmq(
     'oslo_messaging_rabbit/rabbit_notification_exchange': value => $rabbit_notification_exchange;
     'oslo_messaging_rabbit/rabbit_notification_topic':    value => $rabbit_notification_topic;
     'oslo_messaging_rabbit/rabbit_use_ssl':               value => $rabbit_use_ssl;
-    'DEFAULT/amqp_durable_queues':          value => $amqp_durable_queues_real;
+    'oslo_messaging_rabbit/amqp_durable_queues':          value => $amqp_durable_queues_real;
   }
 
   if $rabbit_use_ssl {

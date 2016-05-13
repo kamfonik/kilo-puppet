@@ -360,7 +360,7 @@ class neutron (
     'DEFAULT/rpc_backend':             value => $rpc_backend;
     'DEFAULT/api_extensions_path':     value => $api_extensions_path;
     'DEFAULT/state_path':              value => $state_path;
-    'DEFAULT/lock_path':               value => $lock_path;
+    'oslo_concurrency/lock_path':      value => $lock_path;
     'agent/root_helper':               value => $root_helper;
     'agent/report_interval':           value => $report_interval;
   }

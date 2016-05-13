@@ -245,7 +245,7 @@ class glance::api(
     }
 
     glance_api_config {
-      'glance_store/cinder_endpoint_template':   value => "${auth_protocol}://${auth_host}:8776/v1/%(project_id)s";
+      'glance_store/cinder_endpoint_template':   value => "${auth_protocol}://${auth_host}:8776/v2/%(project_id)s";
       'glance_store/cinder_ca_certificates_file': value => $ca_file;
       'keystone_authtoken/cafile': value => $ca_file;
     }

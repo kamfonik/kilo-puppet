@@ -190,6 +190,8 @@ class openstack::neutron (
   $metadata_ip            = '127.0.0.1',
   # Neutron Authentication Information
   $auth_url               = 'http://localhost:35357/v2.0',
+  $auth_uri               = 'http://localhost:5000/v2.0',
+  $identity_uri           = 'http://localhost:35357/v2.0',
   # Rabbit Information
   $rabbit_user            = 'rabbit_user',
   $rabbit_host            = '127.0.0.1',
@@ -239,8 +241,9 @@ class openstack::neutron (
       fail("Unsupported db type: ${db_type}. Only mysql is currently supported.")
     }
     class { 'neutron::server':
-      auth_host     => $keystone_host,
       auth_password => $user_password,
+      auth_uri      => $auth_uri,
+      identity_uri  => $identity_uri,
     }
     class { 'neutron::plugins::ovs':
       sql_connection      => $sql_connection,

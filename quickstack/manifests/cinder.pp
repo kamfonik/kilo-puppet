@@ -87,6 +87,7 @@ class quickstack::cinder(
     cert_file           => $cert_file,
     key_file            => $key_file,
     ca_file             => $ca_file,
+    enable_v1_api       => false,
   }
   # FIXME: after we drop support for Puppet <= 3.6, we can use
   # `contain ::cinder` instead of the anchors here, and use fully qualified
@@ -99,13 +100,11 @@ class quickstack::cinder(
     keystone_password      => $user_password,
     keystone_tenant        => "services",
     keystone_user          => "cinder",
-    keystone_auth_host     => $keystone_host,
     enabled                => str2bool_i("$enabled"),
     manage_service         => str2bool_i("$manage_service"),
     bind_host              => $bind_host,
     auth_uri               => $auth_uri,
     identity_uri           => $identity_uri,
-    keystone_auth_protocol => $auth_protocol,
   }
 
   class {'::cinder::scheduler':

@@ -553,10 +553,6 @@ class keystone(
 
   keystone_config {
     'DEFAULT/admin_token':      value => $admin_token, secret => true;
-    'DEFAULT/public_bind_host': value => $public_bind_host;
-    'DEFAULT/admin_bind_host':  value => $admin_bind_host;
-    'DEFAULT/public_port':      value => $public_port;
-    'DEFAULT/admin_port':       value => $admin_port;
     'DEFAULT/verbose':          value => $verbose;
     'DEFAULT/debug':            value => $debug;
   }
@@ -786,11 +782,6 @@ class keystone(
       'DEFAULT/kombu_ssl_keyfile':  ensure => absent;
       'DEFAULT/kombu_ssl_version':  ensure => absent;
     }
-  }
-
-  keystone_config {
-    'DEFAULT/admin_workers':  value => $admin_workers;
-    'DEFAULT/public_workers': value => $public_workers;
   }
 
   if $manage_service {

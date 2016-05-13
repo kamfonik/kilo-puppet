@@ -145,12 +145,12 @@ class cinder::api (
   $sync_db                    = true,
   # DEPRECATED PARAMETERS
   $validation_options         = {},
-  $keystone_auth_uri          = false,
-  $keystone_auth_host         = 'localhost',
-  $keystone_auth_port         = '35357',
-  $keystone_auth_protocol     = 'http',
+  $keystone_auth_uri          = undef,
+  $keystone_auth_host         = undef,
+  $keystone_auth_port         = undef,
+  $keystone_auth_protocol     = undef,
   $ca_file                    = undef,
-  $keystone_auth_admin_prefix = false,
+  $keystone_auth_admin_prefix = undef,
   $service_port               = '5000',
 ) {
 
