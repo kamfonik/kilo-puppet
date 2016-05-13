@@ -67,17 +67,18 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
     end
 
     mem['swapUsed'] = mem['swapTotal'] - mem['swapFree']
-    mem['used'] = mem['total'] - mem['free']
     mem['usedWOBuffersCaches'] = mem['used'] - (mem['buffers'] + mem['cached'])
     mem['freeWOBuffersCaches'] = mem['free'] + (mem['buffers'] + mem['cached'])
     mem['swapUsedPercentage'] = 100 * mem['swapUsed'] / mem['swapTotal'] if mem['swapTotal'] > 0
+    mem['used'] = mem['total'] - mem['freeWOBuffersCaches']
 
-    memory_used = (100.0 * mem['freeWOBuffersCaches']) / mem['total']
+    memory_used = (100.0 * mem['used']) / mem['total']
      top5 = 'ps -eo user,pid,%mem,command --sort=%mem --cols 75 | tail -10| tac'
      header = 'ps -eo user,pid,%mem,command --sort=%mem| head -n1'
      output = 'ls'
     if config[:threshold].to_f < memory_used
       print "critical\n"
+      print "Using ", memory_used, "% Memory\n"
       system header
       system top5
       critical
