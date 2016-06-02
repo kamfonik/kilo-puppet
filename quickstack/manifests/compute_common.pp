@@ -83,7 +83,6 @@ class quickstack::compute_common (
   $nova_uuid                    = $quickstack::params::nova_uuid,
   $rbd_key                      = $quickstack::params::rbd_key,
   $ceph_iface                   = $quickstack::params::ceph_iface,
-  $ceph_iface                   = $quickstack::params::ceph_iface,
   $ceph_vlan                    = $quickstack::params::ceph_vlan,
   $sensu_rabbitmq_host          = $quickstack::params::sensu_rabbitmq_host,
   $sensu_rabbitmq_user          = $quickstack::params::sensu_rabbitmq_user,
@@ -93,6 +92,7 @@ class quickstack::compute_common (
   $public_net                   = $quickstack::params::public_net,
   $private_net                  = $quickstack::params::private_net,
   $ntp_local_servers            = $quickstack::params::ntp_local_servers,
+  $elasticsearch_host           = $quickstack::params::elasticsearch_host,
   $backups_user                 = $quickstack::params::backups_user,
   $backups_script_src           = $quickstack::params::backups_script_compute,
   $backups_script_local		    = $quickstack::params::backups_script_local_name,
@@ -409,9 +409,25 @@ class quickstack::compute_common (
        "puppet:///modules/sensu/plugins/disk-metrics.rb"
     ]
   }
-
+  
   class {'quickstack::ntp':
     servers => $ntp_local_servers,
+  }
+
+  class { 'filebeat':
+    outputs => {
+      'logstash'  => {
+        'hosts'       =>  [$elasticsearch_host],
+        'loadbalance' => true
+      }
+    },
+    logging => {
+      'level' => "info"
+    }
+  }
+
+  filebeat::prospector { 'generic':
+      paths => ["/var/log/*.log", "/var/log/secure", "/var/log/messages", "/var/log/ceph/*", "/var/log/nova/*", "/var/log/neutron/*", "/var/log/openvswitch/*", "/var/log/cinder/*", "/var/log/glance/*", "/var/log/horizon/*", "/var/log/httpd/*", "/var/log/keystone/*"]
   }
 
   # Installs scripts for automated backups
@@ -432,6 +448,7 @@ class quickstack::compute_common (
     repo_server => $repo_server,
     randomwait => 180,
   }
+  
   class {'moc_openstack::suricata':
   }
 

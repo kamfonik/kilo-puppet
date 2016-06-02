@@ -183,6 +183,7 @@ class quickstack::controller_common (
   $allow_resize_to_same_host     = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
+  $elasticsearch_host            = $quickstack::params::elasticsearch_host
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -840,12 +841,28 @@ class quickstack::controller_common (
     cron_hour      => $backups_hour,
     cron_min       => $backups_min,
   }
+  
+  class { 'filebeat':
+    outputs => {
+      'logstash'  => {
+	'hosts'        =>  [$elasticsearch_host],
+	'loadbalance' => true
+      }
+    },
+    logging => {
+      'level' => "info"
+    }
+  }
+
+   filebeat::prospector { 'generic':
+      paths => ["/var/log/*.log", "/var/log/secure", "/var/log/messages", "/var/log/ceph/*", "/var/log/nova/*", "/var/log/neutron/*", "/var/log/openvswitch/*", "/var/log/cinder/*", "/var/log/glance/*", "/var/log/horizon/*", "/var/log/httpd/*", "/var/log/keystone/*"]
+    }
 
   class {'moc_openstack::cronjob':
     repo_server => $repo_server,
     randomwait  => 3,
   }
-
+  
   class {'moc_openstack::suricata':
   }
 
