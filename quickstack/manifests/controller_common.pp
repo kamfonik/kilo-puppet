@@ -805,7 +805,10 @@ class quickstack::controller_common (
        "puppet:///modules/sensu/plugins/nova-hypervisor-metrics.py",
        "puppet:///modules/sensu/plugins/nova-server-state-metrics.py",
        "puppet:///modules/sensu/plugins/cpu-pcnt-usage-metrics.rb",
-       "puppet:///modules/sensu/plugins/disk-metrics.rb"
+       "puppet:///modules/sensu/plugins/disk-metrics.rb",
+       "puppet:///modules/sensu/plugins/vmstat-metrics.rb",
+       "puppet:///modules/sensu/plugins/iostat-metrics.rb"
+
     ]
   }
 
@@ -864,5 +867,5 @@ class quickstack::controller_common (
   
   class {'moc_openstack::suricata':
   }
-
+  include sysstat
 }
