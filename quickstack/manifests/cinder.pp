@@ -27,13 +27,13 @@ class quickstack::cinder(
   $manage_service = true,
   $debug          = false,
   $verbose        = false,
-  $auth_uri        = 'http://localhost:5000/v2.0',
-  $identity_uri    = 'http://localhost:35357/v2.0',
-  $cert_file       = '/etc/pki/tls/certs/cinder.crt',
-  $key_file        = '/etc/pki/tls/private/cinder.key',
-  $ca_file         = '/etc/pki/ca-trust/source/anchors/rootCA.crt',
-  $use_ssl         = false,
-  $nova_pub_url    = 'http://localhost:8774/',
+  $auth_uri       = 'http://localhost:5000/v2.0',
+  $identity_uri   = 'http://localhost:35357/v2.0',
+  $cert_file      = '/etc/pki/tls/certs/cinder.crt',
+  $key_file       = '/etc/pki/tls/private/cinder.key',
+  $ca_file        = '/etc/pki/ca-trust/source/anchors/rootCA.crt',
+  $use_ssl        = false,
+  $nova_pub_url   = 'http://localhost:8774/',
 ) {
 #  include ::quickstack::firewall::cinder
 
@@ -87,6 +87,8 @@ class quickstack::cinder(
     cert_file           => $cert_file,
     key_file            => $key_file,
     ca_file             => $ca_file,
+    auth_uri            => $auth_uri,
+    identity_uri        => $identity_uri,
     enable_v1_api       => false,
   }
   # FIXME: after we drop support for Puppet <= 3.6, we can use
