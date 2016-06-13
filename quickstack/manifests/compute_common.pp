@@ -462,4 +462,6 @@ class quickstack::compute_common (
       auth_protocol         => $auth_protocol,
     }
   }
+
+  class {'moc_openstack::nova_resize':}
 }
