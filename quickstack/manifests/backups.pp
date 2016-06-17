@@ -1,4 +1,5 @@
 class backups (
+        $enabled        = $quickstack::params::backups_enabled,
         $user		= $quickstack::params::backups_user,
 	$script_src	= $quickstack::params::backups_script_src,
         $script_local   = $quickstack::params::backups_script_local_name,
@@ -22,8 +23,22 @@ class backups (
         $v_flag = ""
     } 
 
+    if str2bool_i($enabled) {
+        $ens_dir = 'directory'
+        $ens_file = 'file'
+        $ens_user = 'present'
+        $ens_cron = 'present'
+    } 
+    else {
+        $ens_dir = 'absent'
+        $ens_file = 'absent'
+        $ens_user = 'absent'
+        $ens_cron = 'absent'
+    }
+   
+
     user { "${user}":
-      ensure     => present,
+      ensure     => $ens_user,
       comment    => 'backups user',
       home       => "/home/${user}",
       managehome => true,
@@ -31,27 +46,30 @@ class backups (
      }
 
     file { 'ssh_dir' :
-      ensure => directory,
+      ensure => $ens_dir,
       path   => "/home/${user}/.ssh",
       owner  => $user,
       group  => $user,
       mode   => '0700',
+      force  => true,
       before => File['authorized_keys'],
     }
 
-    file { 'authorized_keys':
-      ensure  => present,
+    file { 'authorized_keys' :
+      ensure  => $ens_file,
       path    => "/home/${user}/.ssh/authorized_keys",
       owner   => $user,
       group   => $user,
       mode    => '0600',
       replace => true,
       source  => $ssh_key,
-      require => Class['ssh::server::install'],
+      #require => File ['ssh_dir'],
+      #require => Class['ssh::server::install'],
     }
     
    file { [ $backups_dir, "${backups_dir}/scripts" ] :
-      ensure => 'directory',
+      #Don't set force=true here, that would delete existing backups
+      ensure => $ens_dir,
       owner  => 'root',
       group  => 'root',
       before => File['backup_script'],
@@ -59,7 +77,7 @@ class backups (
 
     file { 'backup_script':
       path    => $script_dest,
-      ensure  => file,
+      ensure  => $ens_file,
       source  => $script_src,
       owner   => 'root',
       group   => $user,
@@ -69,7 +87,7 @@ class backups (
 
     #There *must* be a new line character at the end of the 'content' string, otherwise sudo breaks on the target.
     file { 'sudo-permissions':
-      ensure  => file,
+      ensure  => $ens_file,
       path    => "/etc/sudoers.d/10-${user}",
       owner   => 'root',
       group   => 'root',
@@ -79,11 +97,11 @@ class backups (
     }
      
     file { $log_file :
-        ensure => present,
+        ensure => $ens_file,
     }
 
     file { 'logrotate':
-        ensure => file,
+        ensure => $ens_file,
         path  => '/etc/logrotate.d/backups',
         owner => 'root',
         group => 'root',
@@ -91,6 +109,7 @@ class backups (
     } 
 
     cron { 'backup_cron':
+      ensure      => $ens_cron, 
       command     => "${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}", 
       user        => 'root',
       environment => "MAILTO=${cron_email}",

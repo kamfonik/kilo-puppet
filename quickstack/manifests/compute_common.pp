@@ -94,6 +94,7 @@ class quickstack::compute_common (
   $private_net                  = $quickstack::params::private_net,
   $ntp_local_servers            = $quickstack::params::ntp_local_servers,
   $elasticsearch_host           = $quickstack::params::elasticsearch_host,
+  $backups_enabled 		= $quickstack::params::backups_enabled,
   $backups_user                 = $quickstack::params::backups_user,
   $backups_script_src           = $quickstack::params::backups_script_compute,
   $backups_script_local         = $quickstack::params::backups_script_local_name,
@@ -436,21 +437,29 @@ class quickstack::compute_common (
       paths => ["/var/log/*.log", "/var/log/secure", "/var/log/messages", "/var/log/ceph/*", "/var/log/nova/*", "/var/log/neutron/*", "/var/log/openvswitch/*", "/var/log/cinder/*", "/var/log/glance/*", "/var/log/horizon/*", "/var/log/httpd/*", "/var/log/keystone/*"]
   }
 
-  # Installs scripts for automated backups
-  class {'backups':
-    user           => $backups_user,
-    script_src     => $backups_script_src,
-    script_local   => $backups_script_local,
-    backups_dir    => $backups_dir,
-    log_file       => $backups_log,
-    verbose        => $backups_verbose,
-    ssh_key        => $backups_ssh_key,
-    sudoers_d	   => $backups_sudoers_d,
-    cron_email     => $backups_email,
-    cron_hour      => $backups_hour,
-    cron_min       => $backups_min, 
-    keep_days      => $backups_keep_days,
-  }
+  # Installs scripts for automated backups  
+ # if str2bool_i("$backups_enabled") {
+
+    package { "rsync":
+        ensure => latest,
+    }
+
+    class {'backups':
+      enabled	     => $backups_enabled,
+      user           => $backups_user,
+      script_src     => $backups_script_src,
+      script_local   => $backups_script_local,
+      backups_dir    => $backups_dir,
+      log_file       => $backups_log,
+      verbose        => $backups_verbose,
+      ssh_key        => $backups_ssh_key,
+      sudoers_d	     => $backups_sudoers_d,
+      cron_email     => $backups_email,
+      cron_hour      => $backups_hour,
+      cron_min       => $backups_min, 
+      keep_days      => $backups_keep_days,
+    }
+#  }
 
   class {'moc_openstack::cronjob':
     repo_server => $repo_server,

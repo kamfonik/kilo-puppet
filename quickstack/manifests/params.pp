@@ -381,7 +381,7 @@ class quickstack::params (
   $backups_local_hour,
   $backups_local_min, 
   $backups_keep_days,
-
+  $backups_enabled,
 
   $elasticsearch_host,
 
