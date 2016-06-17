@@ -5,7 +5,7 @@ FILE="/etc/sysconfig/network-scripts/ifcfg-<%= ceph_iface %>.<%= ceph_vlan %>"
 HOST=$(hostname | cut -d- -f2 | cut -d. -f1)
 HOST_IP="192.168.28.$HOST"
 
-rm $FILE
+rm -rf $FILE
 touch $FILE
 echo "DEVICE=\"<%= ceph_iface  %>.<%= ceph_vlan %>\"" >> $FILE
 echo "ONBOOT=yes" >> $FILE

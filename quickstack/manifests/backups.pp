@@ -13,9 +13,9 @@ class backups (
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
 
-    package { 'rsync':
-      ensure => installed,
-    }
+#    package { 'rsync':
+#      ensure => installed,
+#    }
 
     user { "${user}":
       ensure     => present,
