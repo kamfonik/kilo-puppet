@@ -158,7 +158,7 @@ class galera::server (
     require => Class["moc_openstack::ha"],
   }
   exec {'bootstrap_galera':
-    command => "setenforce 0;service mariadb start;lsof -i -n -P|grep 3306 > /dev/null && /bin/cp /root/.my.cnf1 /root/.my.cnf || killall puppet && mysqld_safe --wsrep-new-cluster &",
+    command => "setenforce 0;service mariadb start;setenforce 1;lsof -i -n -P|grep 3306 > /dev/null && /bin/cp /root/.my.cnf1 /root/.my.cnf || killall puppet && mysqld_safe --wsrep-new-cluster &",
     require => File["/root/.my.cnf1"],
     path    => ['/usr/bin', '/bin', '/usr/sbin'],
   }
