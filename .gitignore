@@ -8,4 +8,6 @@
 
 # ignore directories
 moc_openstack/files/certs
+moc_openstack/files/nova/id_rsa
+moc_openstack/files/nova/authorized_keys
 quickstack/files/backup_scripts/
