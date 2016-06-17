@@ -22,10 +22,6 @@ class backups (
         $v_flag = ""
     } 
 
-    package { 'rsync':
-      ensure => installed,
-    }
-
     user { "${user}":
       ensure     => present,
       comment    => 'backups user',
