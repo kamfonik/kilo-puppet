@@ -10,8 +10,8 @@ net7=<%= scope.function_hiera(['ha::pubipnode2']) %>
 [ -f $fileoncotrollersonly ] && QNAME=INPUT || QNAME=FORWARD
 
 iptables -L $QNAME -nv --line-numbers | grep NFQUEUE > /dev/null || iptables -I $QNAME -m mark ! --mark 0x1/0x1 -j NFQUEUE
-iptables -L $QNAME -nv --line-numbers | grep $net5 > /dev/null || iptables -I $QNAME -s $net7 -j ACCEPT
-iptables -L $QNAME -nv --line-numbers | grep $net4 > /dev/null || iptables -I $QNAME -s $net6 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net7 > /dev/null || iptables -I $QNAME -s $net7 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net6 > /dev/null || iptables -I $QNAME -s $net6 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net5 > /dev/null || iptables -I $QNAME -s $net5 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net4 > /dev/null || iptables -I $QNAME -s $net4 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net3 > /dev/null || iptables -I $QNAME -s $net3 -j ACCEPT
