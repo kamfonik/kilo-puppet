@@ -1,0 +1,34 @@
+{
+  "name": "jhoblitt-sysstat",
+  "version": "1.1.0",
+  "source": "https://github.com/jhoblitt/puppet-sysstat.git",
+  "author": "Joshua Hoblitt <jhoblitt@cpan.org>",
+  "license": "Apache",
+  "summary": "Manages the sysstat package",
+  "description": "Manages the sysstat package",
+  "project_page": "https://github.com/jhoblitt/puppet-sysstat",
+  "dependencies": [
+
+  ],
+  "types": [
+
+  ],
+  "checksums": {
+    "CHANGELOG.md": "278e7d3acf97b41524da59fbd6ceb434",
+    "Gemfile": "d5da0703d44dfe6fb90bb98ae80a081f",
+    "Gemfile.lock": "77feea02c614110fdff8373e5cae243b",
+    "LICENSE": "9247efe426cbee11eb63f85001ee5377",
+    "Modulefile": "04143a67a2d334bef26f1ea3b6c319fa",
+    "README.md": "552f77a08e49b0fa9ed6e3919c1bf62e",
+    "Rakefile": "4c4193365c48a892eb67aec88726ccb3",
+    "manifests/init.pp": "e4ee0b7eae2c73e10b381aad5c77e4f4",
+    "manifests/install.pp": "954552ca122c86932ada57197c23ddf2",
+    "manifests/params.pp": "c2ace70207b999bf31755e248b11ac81",
+    "manifests/service.pp": "3f01fabac5f572a71436f049dd4f0a80",
+    "spec/classes/sysstat_install_spec.rb": "e98594b12182bfd66543cee67b0fcb45",
+    "spec/classes/sysstat_params_spec.rb": "8f33434fdc45b6499a638c18a854bc5f",
+    "spec/classes/sysstat_service_spec.rb": "bc655c2b661a4dd7e30b0f6afb9c6f8a",
+    "spec/classes/sysstat_spec.rb": "1e1d917ebc322b33296daf1f8189cf20",
+    "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc"
+  }
+}
