@@ -106,6 +106,7 @@ class quickstack::compute_common (
   $backups_sudoers_d            = $quickstack::params::backups_sudoers_d,
   $backups_hour                 = $quickstack::params::backups_local_hour,
   $backups_min                  = $quickstack::params::backups_local_min, 
+  $backups_keep_days		= $quickstack::params::backups_keep_days,
   $allow_resize_to_same_host    = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host   = $quickstack::params::allow_migrate,
   $repo_server                  = $quickstack::params::repo_server,
@@ -438,28 +439,26 @@ class quickstack::compute_common (
   }
 
   # Installs scripts for automated backups  
- # if str2bool_i("$backups_enabled") {
+  package { "rsync":
+      ensure => latest,
+  }
 
-    package { "rsync":
-        ensure => latest,
-    }
+  class {'backups':
+    enabled	     => $backups_enabled,
+    user           => $backups_user,
+    script_src     => $backups_script_src,
+    script_local   => $backups_script_local,
+    backups_dir    => $backups_dir,
+    log_file       => $backups_log,
+    verbose        => $backups_verbose,
+    ssh_key        => $backups_ssh_key,
+    sudoers_d	     => $backups_sudoers_d,
+    cron_email     => $backups_email,
+    cron_hour      => $backups_hour,
+    cron_min       => $backups_min, 
+    keep_days      => $backups_keep_days,
+  }
 
-    class {'backups':
-      enabled	     => $backups_enabled,
-      user           => $backups_user,
-      script_src     => $backups_script_src,
-      script_local   => $backups_script_local,
-      backups_dir    => $backups_dir,
-      log_file       => $backups_log,
-      verbose        => $backups_verbose,
-      ssh_key        => $backups_ssh_key,
-      sudoers_d	     => $backups_sudoers_d,
-      cron_email     => $backups_email,
-      cron_hour      => $backups_hour,
-      cron_min       => $backups_min, 
-      keep_days      => $backups_keep_days,
-    }
-#  }
 
   class {'moc_openstack::cronjob':
     repo_server => $repo_server,

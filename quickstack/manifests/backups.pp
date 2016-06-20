@@ -16,7 +16,7 @@ class backups (
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
     
-    if $verbose { 
+    if str2bool_i($verbose) { 
         $v_flag = "-v"
     }
     else {
@@ -27,13 +27,11 @@ class backups (
         $ens_dir = 'directory'
         $ens_file = 'file'
         $ens_user = 'present'
-        $ens_cron = 'present'
     } 
     else {
         $ens_dir = 'absent'
         $ens_file = 'absent'
         $ens_user = 'absent'
-        $ens_cron = 'absent'
     }
    
 
@@ -101,20 +99,26 @@ class backups (
     }
 
     file { 'logrotate':
-        ensure => $ens_file,
-        path  => '/etc/logrotate.d/backups',
-        owner => 'root',
-        group => 'root',
-        content => "${log_file} {\n\tsize 100K\n\tmissingok\n\trotate 6\n\tcompress\n}\n",
+        ensure   => $ens_file,
+        path     => '/etc/logrotate.d/backups',
+        replace  => true,
+        owner    => 'root',
+        group    => 'root',
+        content  => "${log_file} {\n\tsize 100K\n\tmissingok\n\trotate 6\n\tcompress\n}\n",
     } 
 
+    file { 'backup_cron':
+    	ensure     => $ens_file,
+        path       => '/etc/cron.d/backups',
+        replace    => true,
+        owner      => 'root',
+        group      => 'root',
+        mode       => '600',
+        content    => "#This file is managed by Puppet\n#run a daily backup script\nMAILTO=${cron_email}\n${cron_min} ${cron_hour} * * * ${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}\n", 
+    }
+
     cron { 'backup_cron':
-      ensure      => $ens_cron, 
-      command     => "${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}", 
-      user        => 'root',
-      environment => "MAILTO=${cron_email}",
-      hour        => $cron_hour,
-      minute      => $cron_min,
+        ensure   => absent,
     }
 }
 
