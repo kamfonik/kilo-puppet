@@ -170,16 +170,19 @@ class quickstack::controller_common (
   $public_net                    = $quickstack::params::public_net,
   $private_net                   = $quickstack::params::private_net,
   $ntp_public_servers            = $quickstack::params::ntp_public_servers,
+  $backups_enabled		 = $quickstack::params::backups_enabled,
   $backups_user                  = $quickstack::params::backups_user,
   $backups_script_src            = $quickstack::params::backups_script_controller,
-  $backups_script_local		     = $quickstack::params::backups_script_local_name,
+  $backups_script_local		 = $quickstack::params::backups_script_local_name,
   $backups_dir                   = $quickstack::params::backups_directory,
   $backups_log                   = $quickstack::params::backups_log,
+  $backups_verbose      	 = $quickstack::params::backups_verbose,
   $backups_email                 = $quickstack::params::backups_email,
   $backups_ssh_key               = $quickstack::params::backups_ssh_key,
-  $backpus_sudoers_d		     = $quickstack::params::backups_sudoers_d,
+  $backups_sudoers_d		 = $quickstack::params::backups_sudoers_d,
   $backups_hour                  = $quickstack::params::backups_local_hour,
   $backups_min                   = $quickstack::params::backups_local_min, 
+  $backups_keep_days	    	 = $quickstack::params::backups_keep_days,
   $allow_resize_to_same_host     = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
@@ -832,18 +835,22 @@ class quickstack::controller_common (
  
   # Installs scripts for automated backups
   class {'backups':
+    enabled        => $backups_enabled,
     user           => $backups_user, 
     script_src     => $backups_script_src,
     script_local   => $backups_script_local,
     backups_dir    => $backups_dir,
     log_file       => $backups_log,
+    verbose        => $backups_verbose,
     ssh_key        => $backups_ssh_key,
     sudoers_d      => $backups_sudoers_d,
     cron_email     => $backups_email,
     cron_hour      => $backups_hour,
     cron_min       => $backups_min,
+    keep_days      => $backups_keep_days,
   }
-  
+     
+
   class { 'filebeat':
     outputs => {
       'logstash'  => {
