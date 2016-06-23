@@ -15,8 +15,12 @@ class backups (
 ) {
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
-    
-    if str2bool_i($verbose) { 
+
+#    package { 'rsync':
+#      ensure => installed,
+#    }
+
+   if str2bool_i($verbose) { 
         $v_flag = "-v"
     }
     else {
@@ -34,7 +38,6 @@ class backups (
         $ens_user = 'absent'
     }
    
-
     user { "${user}":
       ensure     => $ens_user,
       comment    => 'backups user',
@@ -121,20 +124,3 @@ class backups (
         ensure   => absent,
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

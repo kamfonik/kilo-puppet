@@ -12,7 +12,7 @@ class moc_openstack::firewall (
   $private_net = undef,
 )
 {
-  if $::environment == 'production' {
+  if hiera('moc::enablefirewall') == 'true' {
     include ::firewall
     # for a million reasons we should be collecting a list of
     # controllers and compute hosts, when we do we should iterate here

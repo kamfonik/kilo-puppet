@@ -285,6 +285,8 @@ class quickstack::controller_common (
       $nova_sql_connection = "mysql://nova:${nova_db_password}@${mysql_host}/nova"
   }
 
+  class {'hosts':}
+
   class {'quickstack::db::mysql':
     mysql_root_password  => $mysql_root_password,
     keystone_db_password => $keystone_db_password,
@@ -306,6 +308,7 @@ class quickstack::controller_common (
 
     # Networking
     neutron                => str2bool_i("$neutron"),
+    require                => Class['hosts'],
   }
 
   class {'quickstack::amqp::server':
@@ -779,6 +782,19 @@ class quickstack::controller_common (
     ensure => latest,
   }
 
+  package { "lsof":
+    ensure => latest,
+  }
+
+  package { "rsync":
+    ensure => latest,
+  }
+  package { "psmisc":
+    ensure => latest,
+  }
+  package { "NetworkManager":
+    ensure => present,
+  }
 #Customization for isntalling sensu
   class { '::sensu':
     sensu_plugin_name => 'sensu-plugin',
@@ -871,8 +887,17 @@ class quickstack::controller_common (
     repo_server => $repo_server,
     randomwait  => 3,
   }
-  
-  class {'moc_openstack::suricata':
+
+  class {'moc_openstack::suricata': }
+
+
+  if hiera('moc::clusterdeployment') == 'true' {
+    class {'::galera::server':
+      mysql_root_password => $mysql_root_password,
+      require => Class["moc_openstack::ha"],
+    }
+    class {'moc_openstack::ha':
   }
+
   include sysstat
 }
