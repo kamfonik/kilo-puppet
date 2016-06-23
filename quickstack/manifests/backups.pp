@@ -114,7 +114,7 @@ class backups (
         owner      => 'root',
         group      => 'root',
         mode       => '600',
-        content    => "#This file is managed by Puppet\n#run a daily backup script\nMAILTO=${cron_email}\n${cron_min} ${cron_hour} * * * ${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}\n", 
+        content    => "#This file is managed by Puppet\n#run a daily backup script\nMAILTO=${cron_email}\n${cron_min} ${cron_hour} * * * root ${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}\n", 
     }
 
     cron { 'backup_cron':
