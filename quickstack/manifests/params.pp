@@ -371,6 +371,7 @@ class quickstack::params (
   $backups_user,
   $backups_directory,
   $backups_log,
+  $backups_verbose,
   $backups_email,
   $backups_ssh_key,
   $backups_sudoers_d,
@@ -379,6 +380,10 @@ class quickstack::params (
   $backups_script_local_name,
   $backups_local_hour,
   $backups_local_min, 
+  $backups_keep_days,
+  $backups_enabled,
+
+  $elasticsearch_host,
 
   # Allow instance resize
   $allow_resize,
@@ -386,5 +391,6 @@ class quickstack::params (
 
   # repo server
   $repo_server,
+
 ) {
 }

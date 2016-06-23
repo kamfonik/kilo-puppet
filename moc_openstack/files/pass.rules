@@ -1,0 +1,13 @@
+pass ip 10.0.0.0/8 any -> 10.0.0.0/8 any (sid:1;)
+pass ip 10.0.0.0/8 any -> 172.16.0.0/12 any (sid:2;)
+pass ip 10.0.0.0/8 any -> 192.168.0.0/16 any (sid:3;)
+
+pass ip 172.16.0.0/12 any -> 10.0.0.0/8 any (sid:4;)
+pass ip 172.16.0.0/12 any -> 172.16.0.0/12 any (sid:5;)
+pass ip 172.16.0.0/12 any -> 192.168.0.0/16 any (sid:6;)
+
+pass ip 192.168.0.0/16 any -> 10.0.0.0/8 any (sid:7;)
+pass ip 192.168.0.0/16 any -> 172.16.0.0/12 any (sid:8;)
+pass ip 192.168.0.0/16 any -> 192.168.0.0/16 any (sid:9;)
+
+pass ip 127.0.0.0/8 any -> any any (sid:10;)
