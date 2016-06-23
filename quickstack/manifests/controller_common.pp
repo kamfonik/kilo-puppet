@@ -896,7 +896,7 @@ class quickstack::controller_common (
       mysql_root_password => $mysql_root_password,
       require => Class["moc_openstack::ha"],
     }
-    class {'moc_openstack::ha':
+    class {'moc_openstack::ha':}
   }
 
   include sysstat
