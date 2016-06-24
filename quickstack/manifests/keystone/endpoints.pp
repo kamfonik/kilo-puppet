@@ -52,10 +52,10 @@ class quickstack::keystone::endpoints (
   $region                      = 'RegionOne',
   # ceilometer
   $ceilometer                  = false,
-  $ceilometer_user_password    = false,
-  $ceilometer_public_address   = false,
-  $ceilometer_internal_address = false,
-  $ceilometer_admin_address    = false,
+  $ceilometer_user_password    = $quickstack::params::ceilometer_password,
+  $ceilometer_public_address   = $quickstack::params::ceilometer_url,
+  $ceilometer_internal_address = $quickstack::params::ceilometer_url,
+  $ceilometer_admin_address    = $quickstack::params::ceilometer_url,
   # cinder
   $cinder                      = true,
   $cinder_user_password,
