@@ -182,7 +182,7 @@ class ceilometer::keystone::auth (
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
     service_type        => $service_type,
-    service_description => 'Openstack Metering Service',
+    service_description => 'Telemetry',
     service_name        => $service_name_real,
     region              => $region,
     password            => $password,

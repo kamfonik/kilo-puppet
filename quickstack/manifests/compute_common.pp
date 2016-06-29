@@ -341,17 +341,13 @@ class quickstack::compute_common (
       verbose         => $verbose,
     }
 
-    class { 'ceilometer::agent::auth':
-      auth_url      => "${auth_protocol}://${auth_host}:35357/v2.0",
-      auth_password => $ceilometer_user_password,
-    }
-
     class { 'ceilometer::agent::compute':
       enabled => true,
     }
     Package['openstack-nova-common'] -> Package['ceilometer-common']
   }
 
+  class { 'ceilometer::client::compute': }
   include quickstack::tuned::virtual_host
 
 #  firewall { '000 block vnc access for all except controller':

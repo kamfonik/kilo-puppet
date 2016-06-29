@@ -392,5 +392,14 @@ class quickstack::params (
   # repo server
   $repo_server,
 
+  # ceilometer parameters
+  $ceilometer_url,
+  $ceilometer_db,
+  $ceilometer_auth_uri,
+  $ceilometer_identity_uri,
+  $ceilometer_password,
+  $ceilometer_auth_host,
+  $ceilometer_keystone_user,
+  $ceilometer_keystone_tenant
 ) {
 }
