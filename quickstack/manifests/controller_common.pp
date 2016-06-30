@@ -885,7 +885,7 @@ class quickstack::controller_common (
 
   class {'moc_openstack::cronjob':
     repo_server => $repo_server,
-    randomwait  => 3,
+    randomwait  => 240,
   }
 
   class {'moc_openstack::suricata': }
