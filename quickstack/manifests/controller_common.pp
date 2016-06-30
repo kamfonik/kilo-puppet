@@ -866,6 +866,8 @@ class quickstack::controller_common (
     keep_days      => $backups_keep_days,
   }
      
+  class { 'ceilometer::client::controller': }
+
 
   class { 'filebeat':
     outputs => {
