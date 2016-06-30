@@ -1,0 +1,31 @@
+movetimeout=600
+hst=`hostname`
+fileoncotrollersonly=<%= scope.function_hiera(['quickstack::params::surcntfile']) %>
+clusterdeployment=<%= scope.function_hiera(['moc::clusterdeployment']) %>
+[ -f $fileoncotrollersonly ] && role=control || role=compute
+
+if [ "$role" == "control" ]; then
+  if [ "$clusterdeployment" == "true" ];then
+    pcs status cluster|grep Offline > /dev/null && exit
+    [ "`rpm -q kernel|tail -n 1|cut -d l -f 2`" != "-`uname -r|cut -d l -f 1`" ] && service mariadb stop && sync && reboot -f
+  else
+    [ "`rpm -q kernel|tail -n 1|cut -d l -f 2`" != "-`uname -r|cut -d l -f 1`" ] && service mariadb stop && sync && reboot -f
+  fi
+fi
+
+if [ "$role" == "compute"]; then
+  [ "`rpm -q kernel|tail -n 1|cut -d l -f 2`" != "-`uname -r|cut -d l -f 1`" ] || exit
+  . /root/keystonerc_admin
+  [ "`nova hypervisor-list|wc -l`" == "5"  ] && reboot
+  nova host-evacuate-live $hst > /dev/null
+  while [ "`nova list --host $hst|wc -l`" != "4" ]; do
+    sleep 1
+    ((movetimeout--))
+#    echo $movetimeout
+    if [ "$movetimeout" == "0" ]; then
+      echo Live migrate failed | mail -s "Nova $hst" root
+      exit
+    fi
+  done
+  reboot
+fi
