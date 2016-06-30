@@ -68,7 +68,6 @@ class moc_openstack::cronjob (
   file { '/etc/cron.daily/1new-kernel-reboot':
     ensure => 'file',
     content => template('moc_openstack/1new-kernel-reboot.erb'),
-#    path => '/etc/cron.daily/',
     owner => 'root',
     group => 'root',
     mode  => '0755',

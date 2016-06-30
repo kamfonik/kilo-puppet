@@ -20,7 +20,7 @@ if [ "$role" == "compute"]; then
   while [ "`nova list --host $hst|wc -l`" != "4" ]; do
     sleep 1
     ((movetimeout--))
-    echo $movetimeout
+#    echo $movetimeout
     if [ "$movetimeout" == "0" ]; then
       echo Live migrate failed | mail -s "Nova $hst" root
       exit
