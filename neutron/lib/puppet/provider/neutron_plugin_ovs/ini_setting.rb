@@ -16,7 +16,7 @@ Puppet::Type.type(:neutron_plugin_ovs).provide(
   end
 
   def file_path
-    '/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini'
+    '/etc/neutron/plugins/ml2/openvswitch_agent.ini'
   end
 
 end
