@@ -181,7 +181,7 @@ class ceilometer(
     }
 
       if size($rabbit_hosts) > 1 {
-        ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => undef }
+        ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => false }
       } else {
         ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => undef }
       }

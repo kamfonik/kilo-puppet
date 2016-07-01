@@ -189,7 +189,8 @@ class quickstack::controller_common (
   $allow_resize_to_same_host     = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
-  $elasticsearch_host            = $quickstack::params::elasticsearch_host
+  $elasticsearch_host            = $quickstack::params::elasticsearch_host,
+  $enable_ceilometer             = $quickstack::params::enable_ceilometer
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -873,7 +874,9 @@ class quickstack::controller_common (
     keep_days      => $backups_keep_days,
   }
      
-  class { 'ceilometer::client::controller': }
+  if ($enable_ceilometer == true){
+    class { 'ceilometer::client::controller': }
+  }
 
 
   class { 'filebeat':
