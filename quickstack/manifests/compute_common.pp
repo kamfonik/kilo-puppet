@@ -472,7 +472,9 @@ class quickstack::compute_common (
     }
   }
 
-  class {'moc_openstack::nova_resize':}
+  class {'moc_openstack::nova_resize':
+    require => Package['nova-common'],
+  }
 
   include sysstat
 }
