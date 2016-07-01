@@ -28,6 +28,14 @@ class moc_openstack::suricata {
     require => Package['suricata'],
     source => 'puppet:///modules/moc_openstack/suricata.yaml',
   }
+  file { '/etc/suricata/rules/pass.rules':
+    notify  => Service['suricata'],
+    mode    => '0600',
+    owner   => 'suricata',
+    group   => 'root',
+    require => Package['suricata'],
+    source => 'puppet:///modules/moc_openstack/pass.rules',
+  }
   file { '/etc/scripts':
     ensure => 'directory',
     owner => 'root',

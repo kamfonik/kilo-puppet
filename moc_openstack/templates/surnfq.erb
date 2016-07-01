@@ -3,10 +3,16 @@ net1=<%= scope.function_hiera(['quickstack::params::surnet1']) %>
 net2=<%= scope.function_hiera(['quickstack::params::surnet2']) %>
 net3=<%= scope.function_hiera(['quickstack::params::surnet3']) %>
 net4=<%= scope.function_hiera(['quickstack::params::surnet4']) %>
+net5=<%= scope.function_hiera(['ha::vip']) %>
+net6=<%= scope.function_hiera(['ha::pubipnode1']) %>
+net7=<%= scope.function_hiera(['ha::pubipnode2']) %>
 
 [ -f $fileoncotrollersonly ] && QNAME=INPUT || QNAME=FORWARD
 
 iptables -L $QNAME -nv --line-numbers | grep NFQUEUE > /dev/null || iptables -I $QNAME -m mark ! --mark 0x1/0x1 -j NFQUEUE
+iptables -L $QNAME -nv --line-numbers | grep $net7 > /dev/null || iptables -I $QNAME -s $net7 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net6 > /dev/null || iptables -I $QNAME -s $net6 -j ACCEPT
+iptables -L $QNAME -nv --line-numbers | grep $net5 > /dev/null || iptables -I $QNAME -s $net5 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net4 > /dev/null || iptables -I $QNAME -s $net4 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net3 > /dev/null || iptables -I $QNAME -s $net3 -j ACCEPT
 iptables -L $QNAME -nv --line-numbers | grep $net2 > /dev/null || iptables -I $QNAME -s $net2 -j ACCEPT
@@ -44,10 +50,35 @@ if [ "$lnum" != "4" ]; then
     iptables -I $QNAME 4 -s $net4 -j ACCEPT
 fi
 
-lnum=`iptables -L $QNAME -nv --line-numbers | grep NFQUEUE | cut -f 1 -d " "|xargs -n1|sort -r -n`
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net5 | cut -f 1 -d " "|xargs -n1|sort -r -n`
 if [ "$lnum" != "5" ]; then
     for line in $lnum; do
         iptables -D $QNAME $line
     done
-    iptables -I $QNAME 5 -m mark ! --mark 0x1/0x1 -j NFQUEUE
+    iptables -I $QNAME 5 -s $net5 -j ACCEPT
 fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net6 | cut -f 1 -d " "|xargs -n1|sort -r -n`
+if [ "$lnum" != "6" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 6 -s $net6 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep $net7 | cut -f 1 -d " "|xargs -n1|sort -r -n`
+if [ "$lnum" != "7" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 7 -s $net7 -j ACCEPT
+fi
+
+lnum=`iptables -L $QNAME -nv --line-numbers | grep NFQUEUE | cut -f 1 -d " "|xargs -n1|sort -r -n`
+if [ "$lnum" != "8" ]; then
+    for line in $lnum; do
+        iptables -D $QNAME $line
+    done
+    iptables -I $QNAME 8 -m mark ! --mark 0x1/0x1 -j NFQUEUE
+fi
+

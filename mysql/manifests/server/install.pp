@@ -9,5 +9,4 @@ class mysql::server::install {
       name            => $mysql::server::package_name,
     }
   }
-
 }

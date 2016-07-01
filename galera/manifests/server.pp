@@ -91,6 +91,7 @@ class galera::server (
   $bootstrap             = false,
   $debug                 = false,
   $wsrep_node_address    = undef,
+  $wsrep_cluster_address    = undef,
   $wsrep_provider        = '/usr/lib64/galera/libgalera_smm.so',
   $wsrep_cluster_name    = 'galera_cluster',
   $wsrep_cluster_members = [ $::ipaddress ],
@@ -108,13 +109,14 @@ class galera::server (
   $service_name          = 'mariadb',
   $service_enable        = true,
   $service_ensure        = 'running',
+  $mysql_root_password   = '',
 )  {
   if $create_mysql_resource {
   warning("DEPRECATED: ::mysql::server should be called manually, please set create_mysql_resource to false and call class ::mysql::server with your config")
 
     $mysql_server_class = { 'mysql::server' => $mysql_server_hash }
 
-    create_resources( 'class', $mysql_server_class )
+#    create_resources( 'class', $mysql_server_class )
   }
 
   if $wsrep_bind_address {
@@ -136,6 +138,7 @@ class galera::server (
     group   => 'root',
     content => template('galera/wsrep.cnf.erb'),
     notify  => Service['mysqld'],
+    before => Exec['bootstrap_galera'],
   }
 
   if $manage_service {
@@ -145,5 +148,18 @@ class galera::server (
       name   => $service_name,
       enable => $service_enable,
     }
+  }
+
+
+  file { "/root/.my.cnf1":
+    content => template('galera/my.cnf.pass.erb'),
+    owner   => 'root',
+    mode    => '0600',
+    require => Class["moc_openstack::ha"],
+  }
+  exec {'bootstrap_galera':
+    command => "setenforce 0;service mariadb start;setenforce 1;lsof -i -n -P|grep 3306 > /dev/null && /bin/cp /root/.my.cnf1 /root/.my.cnf || killall puppet && mysqld_safe --wsrep-new-cluster &",
+    require => File["/root/.my.cnf1"],
+    path    => ['/usr/bin', '/bin', '/usr/sbin'],
   }
 }

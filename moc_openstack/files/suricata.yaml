@@ -1128,6 +1128,7 @@ ipfw:
 # if not set, it will look at the current working dir
 default-rule-path: /etc/suricata/rules
 rule-files:
+ - pass.rules
  - botcc.rules
  - ciarmy.rules
  - compromised.rules

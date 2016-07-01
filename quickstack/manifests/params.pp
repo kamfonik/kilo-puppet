@@ -373,6 +373,7 @@ class quickstack::params (
   $backups_user,
   $backups_directory,
   $backups_log,
+  $backups_verbose,
   $backups_email,
   $backups_ssh_key,
   $backups_sudoers_d,
@@ -381,6 +382,10 @@ class quickstack::params (
   $backups_script_local_name,
   $backups_local_hour,
   $backups_local_min, 
+  $backups_keep_days,
+  $backups_enabled,
+
+  $elasticsearch_host,
 
   # Allow instance resize
   $allow_resize,
@@ -388,5 +393,15 @@ class quickstack::params (
 
   # repo server
   $repo_server,
+
+  # ceilometer parameters
+  $ceilometer_url,
+  $ceilometer_db,
+  $ceilometer_auth_uri,
+  $ceilometer_identity_uri,
+  $ceilometer_password,
+  $ceilometer_auth_host,
+  $ceilometer_keystone_user,
+  $ceilometer_keystone_tenant
 ) {
 }
