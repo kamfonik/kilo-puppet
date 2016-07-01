@@ -111,6 +111,7 @@ class quickstack::compute_common (
   $allow_migrate_to_same_host   = $quickstack::params::allow_migrate,
   $repo_server                  = $quickstack::params::repo_server,
   $admin_password               = $quickstack::params::admin_password,
+  $enable_ceilometer            = $quickstack::params::enable_ceilometer,
   $controller_admin_host        = $quickstack::params::controller_admin_host,
 ) inherits quickstack::params {
 
@@ -340,15 +341,15 @@ class quickstack::compute_common (
       rpc_backend     => amqp_backend('ceilometer', $amqp_provider),
       verbose         => $verbose,
     }
-
-    class { 'ceilometer::agent::compute':
-      enabled => true,
-    }
+      class { 'ceilometer::agent::compute':
+        enabled => true,
+      }
     Package['openstack-nova-common'] -> Package['ceilometer-common']
   }
-
-  class { 'ceilometer::client::compute': }
-  include quickstack::tuned::virtual_host
+  if ($enable_ceilometer == true){
+    class { 'ceilometer::client::compute': }
+    include quickstack::tuned::virtual_host
+  }
 
 #  firewall { '000 block vnc access for all except controller':
 #    proto  => 'tcp',
