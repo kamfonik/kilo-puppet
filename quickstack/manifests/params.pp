@@ -54,6 +54,10 @@ class quickstack::params (
   $glance_pub_url,
   $glance_priv_url,
   $glance_admin_url,
+  # ceilometer
+  $ceilometer_public_real,
+  $ceilometer_internal_real,
+  $ceilometer_admin_real,
   # cinder
   $cinder_pub_url,
   $cinder_priv_url,

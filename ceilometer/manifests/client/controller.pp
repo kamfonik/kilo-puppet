@@ -15,7 +15,6 @@ class ceilometer::client::controller (
   package { 'openstack-ceilometer-collector':
     ensure => $ensure,
   }
-
   package { 'openstack-ceilometer-notification':
     ensure => $ensure,
   }
@@ -32,36 +31,53 @@ class ceilometer::client::controller (
     ensure => $ensure,
   }
  
-
   class { 'ceilometer::db' : 
    database_connection => $quickstack::params::ceilometer_db
   }
 
 
   class { 'ceilometer::agent::auth':
-   auth_url => $quickstack::params::ceilometer_auth_url,
-   auth_password => $quickstack::params::ceilometer_password,
-   auth_user => $quickstack::params::ceilometer_keystone_user,
-   auth_tenant_name     => $quickstack::params::ceilometer_keystone_tenant
+   auth_url         => $quickstack::params::ceilometer_auth_url,
+   auth_password    => $quickstack::params::ceilometer_password,
+   auth_user        => $quickstack::params::ceilometer_keystone_user,
+   auth_tenant_name => $quickstack::params::ceilometer_keystone_tenant
   }
 
 
   class { 'ceilometer' :
-   rabbit_host => $quickstack::params::amqp_host,
-   rabbit_port => $quickstack::params::ceilometer_rabbit_port,
-   rabbit_use_ssl => "false",
-   rabbit_hosts => $quickstack::params::ceilometer_rabbit_hosts,
-   rabbit_userid => "openstack",
+   rabbit_host     => $quickstack::params::amqp_host,
+   rabbit_port     => $quickstack::params::ceilometer_rabbit_port,
+   rabbit_use_ssl  => "false",
+   rabbit_hosts    => $quickstack::params::ceilometer_rabbit_hosts,
+   rabbit_userid   => "openstack",
    rabbit_password => $quickstack::params::amqp_password,
-   rpc_backend => 'rabbit',
+   rpc_backend     => 'rabbit',
   }
 
-  class { 'ceilometer::api':
-    keystone_auth_uri => $quickstack::params::keystone_pub_url,
-    keystone_identity_uri => $quickstack::params::keystone_admin_url,
-    keystone_password     => $quickstack::params::ceilometer_password,
-    keystone_user     => $quickstack::params::ceilometer_keystone_user,
-    keystone_tenant     => $quickstack::params::ceilometer_keystone_tenant
+  ceilometer_config {
+     'keystone_authtoken/auth_uri': value          => $quickstack::params::keystone_pub_url;
+     'keystone_authtoken/identity_uri': value      => $quickstack::params::keystone_admin_url;
+     'keystone_authtoken/admin_user': value        => $quickstack::params::ceilometer_keystone_user;
+     'keystone_authtoken/admin_password': value    => $quickstack::params::ceilometer_password;
+     'keystone_authtoken/admin_tenant_name': value => $quickstack::params::ceilometer_keystone_tenant;
   }
+
+  service {'openstack-ceilometer-collector':
+    ensure =>'running',
+  }
+
+  service {'openstack-ceilometer-notification':
+    ensure =>'running',
+  }
+
+  service {'openstack-ceilometer-central':
+    ensure =>'running',
+  }
+
+  service {'openstack-ceilometer-alarm-notifier':
+    ensure =>'running',
+  }
+
+
 
 }
