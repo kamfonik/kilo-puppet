@@ -58,6 +58,7 @@ class quickstack::params (
   $ceilometer_public_real,
   $ceilometer_internal_real,
   $ceilometer_admin_real,
+  $enable_ceilometer,
   # cinder
   $cinder_pub_url,
   $cinder_priv_url,
