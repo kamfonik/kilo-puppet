@@ -64,18 +64,25 @@ class ceilometer::client::controller (
 
   service {'openstack-ceilometer-collector':
     ensure =>'running',
+    require => Package ['openstack-ceilometer-collector'],
+
   }
 
   service {'openstack-ceilometer-notification':
     ensure =>'running',
+    require => Package ['openstack-ceilometer-notification'],
+
   }
 
   service {'openstack-ceilometer-central':
     ensure =>'running',
+    require => Package ['openstack-ceilometer-central'],
   }
 
   service {'openstack-ceilometer-alarm-notifier':
     ensure =>'running',
+    require => Package ['openstack-ceilometer-alarm'],
+
   }
 
 
