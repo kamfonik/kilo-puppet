@@ -1,3 +1,4 @@
+package-cleanup -y --oldkernels --count=3 > /dev/null
 movetimeout=600
 hst=`hostname`
 fileoncotrollersonly=<%= scope.function_hiera(['quickstack::params::surcntfile']) %>
