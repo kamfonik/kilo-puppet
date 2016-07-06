@@ -75,13 +75,13 @@
 # (optional) various QPID options
 #
 class ceilometer(
-  $metering_secret     = false,
-  $notification_topics = ['notifications'],
+  $metering_secret     = undef,
+  $notification_topics = undef,
   $package_ensure      = 'present',
-  $debug               = false,
-  $log_dir             = '/var/log/ceilometer',
-  $verbose             = false,
-  $use_syslog          = false,
+  $debug               = undef,
+  $log_dir             = undef,
+  $verbose             = undef,
+  $use_syslog          = undef,
   $log_facility        = 'LOG_USER',
   $rpc_backend         = 'ceilometer.openstack.common.rpc.impl_kombu',
   $rabbit_host         = '127.0.0.1',
@@ -89,12 +89,12 @@ class ceilometer(
   $rabbit_hosts        = undef,
   $rabbit_userid       = 'guest',
   $rabbit_password     = '',
-  $rabbit_virtual_host = '/',
+  $rabbit_virtual_host = undef,
   $rabbit_use_ssl      = false,
   $kombu_ssl_ca_certs  = undef,
   $kombu_ssl_certfile  = undef,
   $kombu_ssl_keyfile   = undef,
-  $kombu_ssl_version   = 'TLSv1',
+  $kombu_ssl_version   = undef,
   $qpid_hostname = 'localhost',
   $qpid_port = 5672,
   $qpid_username = 'guest',
@@ -164,7 +164,7 @@ class ceilometer(
 
   Package['ceilometer-common'] -> Ceilometer_config<||>
 
-  if $rpc_backend == 'ceilometer.openstack.common.rpc.impl_kombu' {
+  if $rpc_backend == 'rabbit' {
 
     if $rabbit_hosts {
       ceilometer_config { 'oslo_messaging_rabbit/rabbit_host': ensure => absent }
@@ -181,9 +181,9 @@ class ceilometer(
     }
 
       if size($rabbit_hosts) > 1 {
-        ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => true }
-      } else {
         ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => false }
+      } else {
+        ceilometer_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => undef }
       }
 
       ceilometer_config {
@@ -256,7 +256,7 @@ class ceilometer(
     'publisher/metering_secret'      : value => $metering_secret, secret => true;
     'DEFAULT/debug'                  : value => $debug;
     'DEFAULT/verbose'                : value => $verbose;
-    'DEFAULT/notification_topics'    : value => join($notification_topics, ',');
+    'DEFAULT/notification_topics'    : value => $notification_topics;
   }
 
   # Log configuration
@@ -273,12 +273,12 @@ class ceilometer(
   # Syslog configuration
   if $use_syslog {
     ceilometer_config {
-      'DEFAULT/use_syslog':           value => true;
+      'DEFAULT/use_syslog':           value => $use_syslog;
       'DEFAULT/syslog_log_facility':  value => $log_facility;
     }
   } else {
     ceilometer_config {
-      'DEFAULT/use_syslog':           value => false;
+      'DEFAULT/use_syslog':           value => $use_syslog;
     }
   }
 

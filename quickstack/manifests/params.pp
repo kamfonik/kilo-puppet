@@ -54,6 +54,11 @@ class quickstack::params (
   $glance_pub_url,
   $glance_priv_url,
   $glance_admin_url,
+  # ceilometer
+  $ceilometer_public_real,
+  $ceilometer_internal_real,
+  $ceilometer_admin_real,
+  $enable_ceilometer,
   # cinder
   $cinder_pub_url,
   $cinder_priv_url,
@@ -400,6 +405,8 @@ class quickstack::params (
   $ceilometer_password,
   $ceilometer_auth_host,
   $ceilometer_keystone_user,
-  $ceilometer_keystone_tenant
+  $ceilometer_keystone_tenant,
+  $ceilometer_rabbit_port,
+  $ceilometer_auth_url
 ) {
 }
