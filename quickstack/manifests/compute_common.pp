@@ -381,7 +381,10 @@ class quickstack::compute_common (
   package { "rubygems":
     ensure => latest,
   }
-
+#Other packages needed
+  package { "yum-utils":
+    ensure => latest,
+  }
 #Customization for configuring sensu
   class { '::sensu':
     sensu_plugin_name     => 'sensu-plugin',
