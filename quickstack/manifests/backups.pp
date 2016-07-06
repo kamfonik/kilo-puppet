@@ -16,10 +16,6 @@ class backups (
 
     $script_dest = "${backups_dir}/scripts/${script_local}"
 
-#    package { 'rsync':
-#      ensure => installed,
-#    }
-
    if str2bool_i($verbose) { 
         $v_flag = "-v"
     }
@@ -64,8 +60,6 @@ class backups (
       mode    => '0600',
       replace => true,
       source  => $ssh_key,
-      #require => File ['ssh_dir'],
-      #require => Class['ssh::server::install'],
     }
     
    file { [ $backups_dir, "${backups_dir}/scripts" ] :
@@ -120,7 +114,4 @@ class backups (
         content    => "#This file is managed by Puppet\n#run a daily backup script\nMAILTO=${cron_email}\n${cron_min} ${cron_hour} * * * root ${script_dest} -d ${backups_dir} -k ${keep_days} ${v_flag} 2>&1 >>${log_file} | tee -a ${log_file}\n", 
     }
 
-    cron { 'backup_cron':
-        ensure   => absent,
-    }
 }

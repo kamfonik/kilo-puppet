@@ -164,5 +164,5 @@ do
 done
 
 #Uncomment the redirection if you want to get an email alert every day from every node
-log -f "Backup of $(hostname -s) complete." >&2
+#log -f "Backup of $(hostname -s) complete." >&2
 
