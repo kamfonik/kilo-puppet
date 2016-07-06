@@ -325,31 +325,31 @@ class quickstack::compute_common (
       identity_uri      => $keystone_admin_url,
     }
   }
-
-  if str2bool_i("$ceilometer") {
-    class { 'ceilometer':
-      metering_secret => $ceilometer_metering_secret,
-      qpid_protocol   => $qpid_protocol,
-      qpid_username   => $amqp_username,
-      qpid_password   => $amqp_password,
-      rabbit_host     => $amqp_host,
-      rabbit_hosts    => $rabbit_hosts,
-      rabbit_port     => $real_amqp_port,
-      rabbit_userid   => $amqp_username,
-      rabbit_password => $amqp_password,
-      rabbit_use_ssl  => $amqp_ssl,
-      rpc_backend     => amqp_backend('ceilometer', $amqp_provider),
-      verbose         => $verbose,
-    }
+  if str2bool_i("$enable_ceilometer") {
+    if str2bool_i("$ceilometer") {
+      class { 'ceilometer':
+        metering_secret => $ceilometer_metering_secret,
+        qpid_protocol   => $qpid_protocol,
+        qpid_username   => $amqp_username,
+        qpid_password   => $amqp_password,
+        rabbit_host     => $amqp_host,
+        rabbit_hosts    => $rabbit_hosts,
+        rabbit_port     => $real_amqp_port,
+        rabbit_userid   => $amqp_username,
+        rabbit_password => $amqp_password,
+        rabbit_use_ssl  => $amqp_ssl,
+        rpc_backend     => amqp_backend('ceilometer', $amqp_provider),
+        verbose         => $verbose,
+      }
       class { 'ceilometer::agent::compute':
         enabled => true,
       }
-    Package['openstack-nova-common'] -> Package['ceilometer-common']
-  }
-  if ($enable_ceilometer == true){
+      Package['openstack-nova-common'] -> Package['ceilometer-common']
+    }
     class { 'ceilometer::client::compute': }
     include quickstack::tuned::virtual_host
   }
+
 
 #  firewall { '000 block vnc access for all except controller':
 #    proto  => 'tcp',

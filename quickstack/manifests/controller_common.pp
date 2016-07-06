@@ -874,9 +874,11 @@ class quickstack::controller_common (
     keep_days      => $backups_keep_days,
   }
      
-  if ($enable_ceilometer == true){
+
+  if str2bool_i("$enable_ceilometer") {
     class { 'ceilometer::client::controller': }
   }
+
 
 
   class { 'filebeat':
