@@ -73,8 +73,8 @@ class ceilometer::api (
   $keystone_password          = false,
   $keystone_auth_uri          = false,
   $keystone_identity_uri      = false,
-  $host                       = '0.0.0.0',
-  $port                       = '8777',
+  $host                       = undef,
+  $port                       = undef,
   # DEPRECATED PARAMETERS
   $keystone_host              = '127.0.0.1',
   $keystone_port              = '35357',

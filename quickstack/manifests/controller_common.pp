@@ -83,6 +83,9 @@ class quickstack::controller_common (
   $glance_admin_url              = $quickstack::params::glance_admin_url,
   $glance_priv_url               = $quickstack::params::glance_priv_url,
   $glance_pub_url                = $quickstack::params::glance_pub_url,
+  $ceilometer_admin_real         = $quickstack::params::ceilometer_admin_real,
+  $ceilometer_internal_real      = $quickstack::params::ceilometer_internal_real,
+  $ceilometer_public_real        = $quickstack::params::ceilometer_public_real,
   $neutron_admin_url             = $quickstack::params::neutron_admin_url,
   $neutron_priv_url              = $quickstack::params::neutron_priv_url,
   $neutron_pub_url               = $quickstack::params::neutron_pub_url,
@@ -188,7 +191,8 @@ class quickstack::controller_common (
   $allow_resize_to_same_host     = $quickstack::params::allow_resize,
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
-  $elasticsearch_host            = $quickstack::params::elasticsearch_host
+  $elasticsearch_host            = $quickstack::params::elasticsearch_host,
+  $enable_ceilometer             = $quickstack::params::enable_ceilometer
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -362,6 +366,10 @@ class quickstack::controller_common (
     nova_public_url_v3      => $nova_public_url_v3,
     nova_internal_url_v3    => $nova_internal_url_v3,
     nova_admin_url_v3       => $nova_admin_url_v3,
+    ceilometer_admin_address   => $ceilometer_admin_real,
+    ceilometer_internal_address => $ceilometer_internal_real,
+    ceilometer_public_address => $ceilometer_public_real,
+    ceilometer_user_password => $ceilometer_user_password,
     glance_admin_url        => $glance_admin_url,
     glance_priv_url         => $glance_priv_url,
     glance_pub_url          => $glance_pub_url,
@@ -783,7 +791,7 @@ class quickstack::controller_common (
   package { "rubygems":
     ensure => latest,
   }
-
+#Other packages needed 
   package { "lsof":
     ensure => latest,
   }
@@ -796,6 +804,9 @@ class quickstack::controller_common (
   }
   package { "NetworkManager":
     ensure => present,
+  }
+  package { "yum-utils":
+    ensure => latest,
   }
 #Customization for isntalling sensu
   class { '::sensu':
@@ -853,21 +864,27 @@ class quickstack::controller_common (
  
   # Installs scripts for automated backups
   class {'backups':
-    enabled        => $backups_enabled,
-    user           => $backups_user, 
-    script_src     => $backups_script_src,
-    script_local   => $backups_script_local,
-    backups_dir    => $backups_dir,
-    log_file       => $backups_log,
-    verbose        => $backups_verbose,
-    ssh_key        => $backups_ssh_key,
-    sudoers_d      => $backups_sudoers_d,
-    cron_email     => $backups_email,
-    cron_hour      => $backups_hour,
-    cron_min       => $backups_min,
-    keep_days      => $backups_keep_days,
+    enabled      => $backups_enabled,
+    user         => $backups_user, 
+    script_src   => $backups_script_src,
+    script_local => $backups_script_local,
+    backups_dir  => $backups_dir,
+    log_file     => $backups_log,
+    verbose      => $backups_verbose,
+    ssh_key      => $backups_ssh_key,
+    sudoers_d    => $backups_sudoers_d,
+    cron_email   => $backups_email,
+    cron_hour    => $backups_hour,
+    cron_min     => $backups_min,
+    keep_days    => $backups_keep_days,
   }
      
+
+  if str2bool_i("$enable_ceilometer") {
+    class { 'ceilometer::client::controller': }
+  }
+
+
 
   class { 'filebeat':
     outputs => {

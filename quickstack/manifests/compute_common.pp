@@ -111,6 +111,7 @@ class quickstack::compute_common (
   $allow_migrate_to_same_host   = $quickstack::params::allow_migrate,
   $repo_server                  = $quickstack::params::repo_server,
   $admin_password               = $quickstack::params::admin_password,
+  $enable_ceilometer            = $quickstack::params::enable_ceilometer,
   $controller_admin_host        = $quickstack::params::controller_admin_host,
 ) inherits quickstack::params {
 
@@ -324,31 +325,31 @@ class quickstack::compute_common (
       identity_uri      => $keystone_admin_url,
     }
   }
-
-  if str2bool_i("$ceilometer") {
-    class { 'ceilometer':
-      metering_secret => $ceilometer_metering_secret,
-      qpid_protocol   => $qpid_protocol,
-      qpid_username   => $amqp_username,
-      qpid_password   => $amqp_password,
-      rabbit_host     => $amqp_host,
-      rabbit_hosts    => $rabbit_hosts,
-      rabbit_port     => $real_amqp_port,
-      rabbit_userid   => $amqp_username,
-      rabbit_password => $amqp_password,
-      rabbit_use_ssl  => $amqp_ssl,
-      rpc_backend     => amqp_backend('ceilometer', $amqp_provider),
-      verbose         => $verbose,
+  if str2bool_i("$enable_ceilometer") {
+    if str2bool_i("$ceilometer") {
+      class { 'ceilometer':
+        metering_secret => $ceilometer_metering_secret,
+        qpid_protocol   => $qpid_protocol,
+        qpid_username   => $amqp_username,
+        qpid_password   => $amqp_password,
+        rabbit_host     => $amqp_host,
+        rabbit_hosts    => $rabbit_hosts,
+        rabbit_port     => $real_amqp_port,
+        rabbit_userid   => $amqp_username,
+        rabbit_password => $amqp_password,
+        rabbit_use_ssl  => $amqp_ssl,
+        rpc_backend     => amqp_backend('ceilometer', $amqp_provider),
+        verbose         => $verbose,
+      }
+      class { 'ceilometer::agent::compute':
+        enabled => true,
+      }
+      Package['openstack-nova-common'] -> Package['ceilometer-common']
     }
-
-    class { 'ceilometer::agent::compute':
-      enabled => true,
-    }
-    Package['openstack-nova-common'] -> Package['ceilometer-common']
+    class { 'ceilometer::client::compute': }
+    include quickstack::tuned::virtual_host
   }
 
-  class { 'ceilometer::client::compute': }
-  include quickstack::tuned::virtual_host
 
 #  firewall { '000 block vnc access for all except controller':
 #    proto  => 'tcp',
@@ -381,7 +382,10 @@ class quickstack::compute_common (
   package { "rubygems":
     ensure => latest,
   }
-
+#Other packages needed
+  package { "yum-utils":
+    ensure => latest,
+  }
 #Customization for configuring sensu
   class { '::sensu':
     sensu_plugin_name     => 'sensu-plugin',
@@ -440,19 +444,19 @@ class quickstack::compute_common (
   }
 
   class {'backups':
-    enabled	     => $backups_enabled,
-    user           => $backups_user,
-    script_src     => $backups_script_src,
-    script_local   => $backups_script_local,
-    backups_dir    => $backups_dir,
-    log_file       => $backups_log,
-    verbose        => $backups_verbose,
-    ssh_key        => $backups_ssh_key,
-    sudoers_d	     => $backups_sudoers_d,
-    cron_email     => $backups_email,
-    cron_hour      => $backups_hour,
-    cron_min       => $backups_min, 
-    keep_days      => $backups_keep_days,
+    enabled      => $backups_enabled,
+    user         => $backups_user,
+    script_src   => $backups_script_src,
+    script_local => $backups_script_local,
+    backups_dir  => $backups_dir,
+    log_file     => $backups_log,
+    verbose      => $backups_verbose,
+    ssh_key      => $backups_ssh_key,
+    sudoers_d    => $backups_sudoers_d,
+    cron_email   => $backups_email,
+    cron_hour    => $backups_hour,
+    cron_min     => $backups_min, 
+    keep_days    => $backups_keep_days,
   }
 
 
