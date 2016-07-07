@@ -14,7 +14,7 @@ if [ "$role" == "control" ]; then
   fi
 fi
 
-if [ "$role" == "compute"]; then
+if [ "$role" == "compute" ]; then
   [ "`rpm -q kernel|tail -n 1|cut -d l -f 2`" != "-`uname -r|cut -d l -f 1`" ] || exit
   . /root/keystonerc_admin
   [ "`nova hypervisor-list|wc -l`" == "5"  ] && reboot
