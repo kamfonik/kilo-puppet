@@ -862,19 +862,19 @@ class quickstack::controller_common (
  
   # Installs scripts for automated backups
   class {'backups':
-    enabled        => $backups_enabled,
-    user           => $backups_user, 
-    script_src     => $backups_script_src,
-    script_local   => $backups_script_local,
-    backups_dir    => $backups_dir,
-    log_file       => $backups_log,
-    verbose        => $backups_verbose,
-    ssh_key        => $backups_ssh_key,
-    sudoers_d      => $backups_sudoers_d,
-    cron_email     => $backups_email,
-    cron_hour      => $backups_hour,
-    cron_min       => $backups_min,
-    keep_days      => $backups_keep_days,
+    enabled      => $backups_enabled,
+    user         => $backups_user, 
+    script_src   => $backups_script_src,
+    script_local => $backups_script_local,
+    backups_dir  => $backups_dir,
+    log_file     => $backups_log,
+    verbose      => $backups_verbose,
+    ssh_key      => $backups_ssh_key,
+    sudoers_d    => $backups_sudoers_d,
+    cron_email   => $backups_email,
+    cron_hour    => $backups_hour,
+    cron_min     => $backups_min,
+    keep_days    => $backups_keep_days,
   }
      
 
