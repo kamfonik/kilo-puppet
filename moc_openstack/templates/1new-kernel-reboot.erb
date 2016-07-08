@@ -19,7 +19,7 @@ if [ "$role" == "compute" ]; then
   . /root/keystonerc_admin
   [ "`nova hypervisor-list|wc -l`" == "5"  ] && reboot
   nova host-evacuate-live $hst > /dev/null
-  while [ "`nova list --host $hst|wc -l`" != "4" ]; do
+  while [ "`virsh list|wc -l`" != "3" ]; do
     sleep 1
     ((movetimeout--))
 #    echo $movetimeout
