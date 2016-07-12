@@ -1,5 +1,6 @@
 # Quickstack controller node
 class quickstack::controller_common (
+  $sahara_enabled                = $quickstack::params::sahara_enabled,
   $admin_email                   = $quickstack::params::admin_email,
   $admin_password                = $quickstack::params::admin_password,
   $ceilometer_metering_secret    = $quickstack::params::ceilometer_metering_secret,
@@ -710,10 +711,16 @@ class quickstack::controller_common (
   }
 
   class {'memcached':}
-
+  
+  if $sahara_enabled {
+    $dbport_list = ['80', '443', '5000', '35357', '8080', '8773', '8774', '8775', '8776', '8777', '9292', '9696', '6080', '8386', '5672']
+  } else {
+    $dbport_list = ['80', '443', '5000', '35357', '8080', '8773', '8774', '8775', '8776', '8777', '9292', '9696', '6080']
+  }
+  
   firewall { '001 controller incoming':
     proto    => 'tcp',
-    dport    => ['80', '443', '5000', '35357', '8080', '8773', '8774', '8775', '8776', '8777', '9292', '9696', '6080'],
+    dport    => $dbport_list,
     action   => 'accept',
   }
 
@@ -907,8 +914,9 @@ class quickstack::controller_common (
     randomwait  => 240,
   }
 
-  class {'moc_openstack::suricata': }
-
+  if !$sahara_enabled {
+    class {'moc_openstack::suricata': }
+  }
 
   if hiera('moc::clusterdeployment') == 'true' {
     class {'::galera::server':
@@ -919,4 +927,9 @@ class quickstack::controller_common (
   }
 
   include sysstat
+
+  if $sahara_enabled {
+    class {'quickstack::sahara': }
+  }
+
 }

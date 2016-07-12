@@ -109,6 +109,7 @@ class quickstack::db::mysql (
                     'ssl-ca'         => $mysql_ca,
                     'ssl-cert'       => $mysql_cert,
                     'ssl-key'        => $mysql_key,
+                    'max_allowed_packet' => '256M',
       },
     },
     root_password => $mysql_root_password,

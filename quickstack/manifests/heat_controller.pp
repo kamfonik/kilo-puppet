@@ -1,4 +1,5 @@
 class quickstack::heat_controller(
+  $sahara_enabled = $quickstack::params::sahara_enabled,
   $auth_encryption_key,
   $heat_cfn,
   $heat_cloudwatch,
@@ -66,11 +67,22 @@ class quickstack::heat_controller(
       enabled => str2bool_i("$heat_cloudwatch"),
   }
 
-  class { '::heat::engine':
+  if $sahara_enabled {
+    class { '::heat::engine':
+      auth_encryption_key             => $auth_encryption_key,
+      heat_metadata_server_url        => "http://${controller_priv_host}:8000",
+      heat_waitcondition_server_url   => "http://${controller_priv_host}:8000/v1/waitcondition",
+      heat_watch_server_url           => "http://${controller_priv_host}:8003",
+      trusts_delegated_roles           => [''],
+      configure_delegated_roles       => false,
+    }
+  } else {
+    class { '::heat::engine':
       auth_encryption_key           => $auth_encryption_key,
       heat_metadata_server_url      => "http://${controller_priv_host}:8000",
       heat_waitcondition_server_url => "http://${controller_priv_host}:8000/v1/waitcondition",
       heat_watch_server_url         => "http://${controller_priv_host}:8003",
+     }
   }
 
   # TODO: this ain't no place to be creating a db locally as happens below
