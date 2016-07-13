@@ -395,8 +395,8 @@ class quickstack::neutron::controller (
     auth_uri                         => $auth_uri,
     identity_uri                     => $identity_uri,
     auth_password                    => $neutron_user_password,
-    l3_ha                            => $l3_ha,
-    allow_automatic_l3agent_failover => $allow_automatic_l3agent_failover,
+    l3_ha                            => str2bool_i($l3_ha),
+    allow_automatic_l3agent_failover => str2bool_i($allow_automatic_l3agent_failover),
   }
 
   if $neutron_core_plugin == 'neutron.plugins.ml2.plugin.Ml2Plugin' {
