@@ -466,9 +466,7 @@ class quickstack::compute_common (
     randomwait => 240,
   }
 
-  if !$sahara_enabled {   
-    class {'moc_openstack::suricata':
-    }
+  class {'moc_openstack::suricata':
   }
 
   if str2bool_i("$keystonerc") {

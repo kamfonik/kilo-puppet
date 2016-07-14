@@ -30,7 +30,7 @@ class quickstack::sahara (
     identity_url        => $keystone_identity_uri,
     service_host        => '0.0.0.0',
     service_port        => 8386,
-    use_floating_ips    => true,
+    use_floating_ips    => false,
   }
 
   sahara_config {

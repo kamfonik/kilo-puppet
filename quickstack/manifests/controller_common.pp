@@ -914,9 +914,7 @@ class quickstack::controller_common (
     randomwait  => 240,
   }
 
-  if !$sahara_enabled {
-    class {'moc_openstack::suricata': }
-  }
+  class {'moc_openstack::suricata': }
 
   if hiera('moc::clusterdeployment') == 'true' {
     class {'::galera::server':
