@@ -409,6 +409,7 @@ class quickstack::params (
   $ceilometer_keystone_user,
   $ceilometer_keystone_tenant,
   $ceilometer_rabbit_port,
-  $ceilometer_auth_url
+  $ceilometer_auth_url,
+  $ceilometer_backend
 ) {
 }
