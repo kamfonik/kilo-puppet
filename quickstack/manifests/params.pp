@@ -418,5 +418,6 @@ class quickstack::params (
   $sahara_debug,
   $heat_domain_password,
   $sahara_plugins,
+  $sahara_use_ssl,
 ) {
 }

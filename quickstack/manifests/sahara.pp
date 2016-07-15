@@ -11,7 +11,14 @@ class quickstack::sahara (
   $rabbit_userid = $quickstack::params::amqp_username,
   $rabbit_password = $quickstack::params::amqp_password,
   $hostname = $quickstack::params::controller_admin_host,
+  $sahara_use_ssl = $quickstack::params::sahara_use_ssl,
 ) {
+  
+  if ($sahara_use_ssl) {
+      class {'moc_openstack::ssl::add_sahara_cert':
+      }
+    }
+
 
   class { '::sahara::db::mysql':
     password => $sahara_db_password,
@@ -38,14 +45,20 @@ class quickstack::sahara (
     'DEFAULT/plugins': value => $sahara_plugins;
   }
 
+  if $sahara_use_ssl {
+    $endpoint_url = "https://${hostname}:8386/v1.1/%(tenant_id)s"
+  } else {
+    $endpoint_url = "http://${hostname}:8386/v1.1/%(tenant_id)s"
+  }
+
   class { '::sahara::keystone::auth':
     password     => $sahara_password,
     auth_name    => 'sahara',
     tenant       => $keystone_tenant_name,
     region       => $keystone_region_name,
-    public_url   => "http://${hostname}:8386/v1.1/%(tenant_id)s",
-    admin_url    => "http://${hostname}:8386/v1.1/%(tenant_id)s", 
-    internal_url => "http://${hostname}:8386/v1.1/%(tenant_id)s",
+    public_url   => $endpoint_url, 
+    admin_url    => $endpoint_url, 
+    internal_url => $endpoint_url,
   }
 
   class { '::sahara::notify::rabbitmq':
