@@ -20,15 +20,11 @@ class quickstack::heat_controller(
   $verbose,
   $heat_use_ssl = $quickstack::params::use_ssl_endpoints,
   $heat_key = $quickstack::params::heat_key,
-  $heat_controller = $quickstack::params::heat_cert,
+  $heat_cert = $quickstack::params::heat_cert,
 ) {
 
-  if ($heat_use_ssl) {
+  if str2bool_i($heat_use_ssl) {
       class {'moc_openstack::ssl::add_heat_cert':
-      }
-      heat_config {
-        'ssl/key_file': value => $heat_key;
-        'ssl/cert_file': value => $heat_cert;
       }
   }
 
@@ -37,11 +33,21 @@ class quickstack::heat_controller(
   } else {
     $sql_connection = "mysql://heat:${heat_db_password}@${mysql_host}/heat"
   }
+  
+  if str2bool_i($heat_use_ssl) {
+    $heat_endpoint_protocol = "https"
+  } else {
+    $heat_endpoint_protocl = "http"
+  }
+  
   class {"::heat::keystone::auth":
       password         => $heat_user_password,
       public_address   => $controller_pub_host,
       admin_address    => $controller_priv_host,
       internal_address => $controller_priv_host,
+      public_protocol  => $heat_endpoint_protocol,
+      internal_protocol => $heat_endpoint_protocol,
+      admin_protocol   => $heat_endpoint_protocol,
   }
 
   class {"::heat::keystone::auth_cfn":
@@ -71,15 +77,31 @@ class quickstack::heat_controller(
       sql_connection    => $sql_connection,
   }
 
-  class { '::heat::api_cfn':
-      enabled => str2bool_i("$heat_cfn"),
-  }
+  if str2bool_i($heat_use_ssl) {
+    class { '::heat::api_cfn':
+        enabled => str2bool_i("$heat_cfn"),
+        use_ssl => true,
+        cert_file => $heat_cert,
+        key_file  => $heat_key,
+    }
 
-  class { '::heat::api_cloudwatch':
-      enabled => str2bool_i("$heat_cloudwatch"),
+    class { '::heat::api_cloudwatch':
+        enabled => str2bool_i("$heat_cloudwatch"),
+        use_ssl => true,
+        cert_file => $heat_cert,
+        key_file => $heat_key,
+    }
+  } else {
+    class { '::heat::api_cfn':
+        enabled => str2bool_i("$heat_cfn"),
+    }
+
+    class { '::heat::api_cloudwatch':
+        enabled => str2bool_i("$heat_cloudwatch"),
+    }
   }
   
-  if $heat_use_ssl {
+  if str2bool_i($heat_use_ssl) {
     $protocol = "https"
   } else {
     $protocol = "http"
@@ -110,6 +132,14 @@ class quickstack::heat_controller(
     allowed_hosts => "%%",
   }
 
-  class { '::heat::api':
+  if str2bool_i($heat_use_ssl) {
+    class { '::heat::api':
+      use_ssl  => true,
+      cert_file => $heat_cert,
+      key_file => $heat_key,
+    }
+  } else {
+    class { '::heat::api':
+    }
   }
 }

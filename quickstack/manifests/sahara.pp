@@ -16,7 +16,7 @@ class quickstack::sahara (
   $sahara_cert = $quickstack::params::sahara_cert,
 ) {
   
-  if ($sahara_use_ssl) {
+  if str2bool_i($sahara_use_ssl) {
       class {'moc_openstack::ssl::add_sahara_cert':
       }
     }
@@ -52,7 +52,7 @@ class quickstack::sahara (
     'ssl/cert_file': value => $sahara_cert;
   }
 
-  if $sahara_use_ssl {
+  if str2bool_i($sahara_use_ssl) {
     $endpoint_url = "https://${hostname}:8386/v1.1/%(tenant_id)s"
   } else {
     $endpoint_url = "http://${hostname}:8386/v1.1/%(tenant_id)s"
