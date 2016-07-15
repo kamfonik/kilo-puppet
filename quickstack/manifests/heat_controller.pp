@@ -19,10 +19,16 @@ class quickstack::heat_controller(
   $amqp_password,
   $verbose,
   $heat_use_ssl = $quickstack::params::use_ssl_endpoints,
+  $heat_key = $quickstack::params::heat_key,
+  $heat_controller = $quickstack::params::heat_cert,
 ) {
 
   if ($heat_use_ssl) {
       class {'moc_openstack::ssl::add_heat_cert':
+      }
+      heat_config {
+        'ssl/key_file': value => $heat_key;
+        'ssl/cert_file': value => $heat_cert;
       }
   }
 

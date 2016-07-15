@@ -12,6 +12,8 @@ class quickstack::sahara (
   $rabbit_password = $quickstack::params::amqp_password,
   $hostname = $quickstack::params::controller_admin_host,
   $sahara_use_ssl = $quickstack::params::use_ssl_endpoints,
+  $sahara_key = $quickstack::params::sahara_key,
+  $sahara_cert = $quickstack::params::sahara_cert,
 ) {
   
   if ($sahara_use_ssl) {
@@ -43,6 +45,11 @@ class quickstack::sahara (
   sahara_config {
     'DEFAULT/heat_enable_wait_condition': value => false;
     'DEFAULT/plugins': value => $sahara_plugins;
+  }
+  
+  sahara_config {
+    'ssl/key_file': value => $sahara_key;
+    'ssl/cert_file': value => $sahara_cert;
   }
 
   if $sahara_use_ssl {

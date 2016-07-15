@@ -216,6 +216,10 @@ class quickstack::params (
   $glance_cert,
   $neutron_key,
   $neutron_cert,
+  $heat_key,
+  $heat_cert,
+  $sahara_key,
+  $sahara_cert,
 
   # neutron plugin config
   $neutron_core_plugin,
