@@ -55,6 +55,9 @@ class quickstack::heat_controller(
       public_address   => $controller_pub_host,
       admin_address    => $controller_priv_host,
       internal_address => $controller_priv_host,
+      public_protocol  => $heat_endpoint_protocol,
+      internal_protocol => $heat_endpoint_protocol,
+      admin_protocol   => $heat_endpoint_protocol,
   }
 
   class { '::heat':
