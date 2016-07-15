@@ -18,7 +18,13 @@ class quickstack::heat_controller(
   $amqp_username,
   $amqp_password,
   $verbose,
+  $heat_use_ssl = $quickstack::params::use_ssl_endpoints,
 ) {
+
+  if ($heat_use_ssl) {
+      class {'moc_openstack::ssl::add_heat_cert':
+      }
+  }
 
   if str2bool_i("$ssl") {
     $sql_connection = "mysql://heat:${heat_db_password}@${mysql_host}/heat?ssl_ca=${mysql_ca}"
@@ -66,22 +72,28 @@ class quickstack::heat_controller(
   class { '::heat::api_cloudwatch':
       enabled => str2bool_i("$heat_cloudwatch"),
   }
-
+  
+  if $heat_use_ssl {
+    $protocol = "https"
+  } else {
+    $protocol = "http"
+  }
+  
   if $sahara_enabled {
     class { '::heat::engine':
       auth_encryption_key             => $auth_encryption_key,
-      heat_metadata_server_url        => "http://${controller_priv_host}:8000",
-      heat_waitcondition_server_url   => "http://${controller_priv_host}:8000/v1/waitcondition",
-      heat_watch_server_url           => "http://${controller_priv_host}:8003",
+      heat_metadata_server_url        => "${protocol}://${controller_priv_host}:8000",
+      heat_waitcondition_server_url   => "${protocol}://${controller_priv_host}:8000/v1/waitcondition",
+      heat_watch_server_url           => "${protocol}://${controller_priv_host}:8003",
       trusts_delegated_roles           => [''],
       configure_delegated_roles       => false,
     }
   } else {
     class { '::heat::engine':
       auth_encryption_key           => $auth_encryption_key,
-      heat_metadata_server_url      => "http://${controller_priv_host}:8000",
-      heat_waitcondition_server_url => "http://${controller_priv_host}:8000/v1/waitcondition",
-      heat_watch_server_url         => "http://${controller_priv_host}:8003",
+      heat_metadata_server_url      => "${protocol}://${controller_priv_host}:8000",
+      heat_waitcondition_server_url => "${protocol}://${controller_priv_host}:8000/v1/waitcondition",
+      heat_watch_server_url         => "${protocol}://${controller_priv_host}:8003",
      }
   }
 

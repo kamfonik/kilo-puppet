@@ -11,7 +11,7 @@ class quickstack::sahara (
   $rabbit_userid = $quickstack::params::amqp_username,
   $rabbit_password = $quickstack::params::amqp_password,
   $hostname = $quickstack::params::controller_admin_host,
-  $sahara_use_ssl = $quickstack::params::sahara_use_ssl,
+  $sahara_use_ssl = $quickstack::params::use_ssl_endpoints,
 ) {
   
   if ($sahara_use_ssl) {
