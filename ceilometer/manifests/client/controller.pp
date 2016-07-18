@@ -60,6 +60,7 @@ class ceilometer::client::controller (
      'keystone_authtoken/admin_user': value        => $quickstack::params::ceilometer_keystone_user;
      'keystone_authtoken/admin_password': value    => $quickstack::params::ceilometer_password;
      'keystone_authtoken/admin_tenant_name': value => $quickstack::params::ceilometer_keystone_tenant;
+     'publisher/metering_secret': ensure => absent; 
   }
 
   service {'openstack-ceilometer-collector':

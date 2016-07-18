@@ -4,7 +4,7 @@
 #
 # == parameters
 #
-#  [*metering_secret*]
+#  [*telemetry_secret*]
 #    secret key for signing messages. Mandatory.
 #  [*notification_topics*]
 #    AMQP topic used for OpenStack notifications (list value)
@@ -75,7 +75,7 @@
 # (optional) various QPID options
 #
 class ceilometer(
-  $metering_secret     = undef,
+  $telemetry_secret    = $quickstack::params::ceilometer_metering_secret,
   $notification_topics = undef,
   $package_ensure      = 'present',
   $debug               = undef,
@@ -110,7 +110,7 @@ class ceilometer(
   $qpid_reconnect_interval = 0
 ) {
 
-  validate_string($metering_secret)
+  validate_string($telemetry_secret)
 
   include ::ceilometer::params
 
@@ -253,7 +253,7 @@ class ceilometer(
   # Once we got here, we can act as an honey badger on the rpc used.
   ceilometer_config {
     'DEFAULT/rpc_backend'            : value => $rpc_backend;
-    'publisher/metering_secret'      : value => $metering_secret, secret => true;
+    'publisher/telemetry_secret'      : value => $telemetry_secret, secret => true;
     'DEFAULT/debug'                  : value => $debug;
     'DEFAULT/verbose'                : value => $verbose;
     'DEFAULT/notification_topics'    : value => $notification_topics;

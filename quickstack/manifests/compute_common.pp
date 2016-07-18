@@ -329,7 +329,7 @@ class quickstack::compute_common (
   if str2bool_i("$enable_ceilometer") {
     if str2bool_i("$ceilometer") {
       class { 'ceilometer':
-        metering_secret => $ceilometer_metering_secret,
+        telemetry_secret => $ceilometer_metering_secret,
         qpid_protocol   => $qpid_protocol,
         qpid_username   => $amqp_username,
         qpid_password   => $amqp_password,
