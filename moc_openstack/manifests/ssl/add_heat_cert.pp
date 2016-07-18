@@ -7,7 +7,7 @@ class moc_openstack::ssl::add_heat_cert (
 
   file { $heat_crt:
     ensure => present,
-    mode => '0644',
+    mode => '0600',
     owner => 'heat',
     group => 'heat',
     source => $heat_crt_path,
@@ -15,7 +15,7 @@ class moc_openstack::ssl::add_heat_cert (
 
   file { $heat_key:
     ensure => present,
-    mode => '0644',
+    mode => '0600',
     owner => 'heat',
     group => 'heat',
     source => $heat_key_path,

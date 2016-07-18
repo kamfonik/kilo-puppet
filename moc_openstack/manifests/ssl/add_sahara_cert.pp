@@ -7,7 +7,7 @@ class moc_openstack::ssl::add_sahara_cert (
 
   file { $sahara_crt:
     ensure => present,
-    mode => '0644',
+    mode => '0600',
     owner => 'sahara',
     group => 'sahara',
     source => $sahara_crt_path,
@@ -15,7 +15,7 @@ class moc_openstack::ssl::add_sahara_cert (
 
   file { $sahara_key:
     ensure => present,
-    mode => '0644',
+    mode => '0600',
     owner => 'sahara',
     group => 'sahara',
     source => $sahara_key_path,
