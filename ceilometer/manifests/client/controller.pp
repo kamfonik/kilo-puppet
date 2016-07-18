@@ -45,13 +45,13 @@ class ceilometer::client::controller (
 
 
   class { 'ceilometer' :
-   rabbit_host     => $quickstack::params::amqp_host,
-   rabbit_port     => $quickstack::params::ceilometer_rabbit_port,
-   rabbit_use_ssl  => "false",
-   rabbit_hosts    => $quickstack::params::ceilometer_rabbit_hosts,
-   rabbit_userid   => "openstack",
-   rabbit_password => $quickstack::params::amqp_password,
-   rpc_backend     => 'rabbit',
+   rabbit_host      => $quickstack::params::amqp_host,
+   rabbit_port      => $quickstack::params::ceilometer_rabbit_port,
+   rabbit_use_ssl   => "false",
+   rabbit_hosts     => $quickstack::params::ceilometer_rabbit_hosts,
+   rabbit_userid    => "openstack",
+   rabbit_password  => $quickstack::params::amqp_password,
+   rpc_backend      => 'rabbit',
    telemetry_secret => $quickstack::params::ceilometer_metering_secret
   }
 
