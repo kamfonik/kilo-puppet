@@ -52,6 +52,7 @@ class ceilometer::client::controller (
    rabbit_userid   => "openstack",
    rabbit_password => $quickstack::params::amqp_password,
    rpc_backend     => 'rabbit',
+   telemetry_secret => $quickstack::params::ceilometer_metering_secret
   }
 
   ceilometer_config {
@@ -60,7 +61,7 @@ class ceilometer::client::controller (
      'keystone_authtoken/admin_user': value        => $quickstack::params::ceilometer_keystone_user;
      'keystone_authtoken/admin_password': value    => $quickstack::params::ceilometer_password;
      'keystone_authtoken/admin_tenant_name': value => $quickstack::params::ceilometer_keystone_tenant;
-     'publisher/metering_secret': ensure => absent; 
+     'publisher/metering_secret': ensure           => absent; 
   }
 
   service {'openstack-ceilometer-collector':

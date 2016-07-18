@@ -75,7 +75,7 @@
 # (optional) various QPID options
 #
 class ceilometer(
-  $telemetry_secret    = $quickstack::params::ceilometer_metering_secret,
+  $telemetry_secret    = undef,
   $notification_topics = undef,
   $package_ensure      = 'present',
   $debug               = undef,
@@ -253,7 +253,7 @@ class ceilometer(
   # Once we got here, we can act as an honey badger on the rpc used.
   ceilometer_config {
     'DEFAULT/rpc_backend'            : value => $rpc_backend;
-    'publisher/telemetry_secret'      : value => $telemetry_secret, secret => true;
+    'publisher/telemetry_secret'     : value => $telemetry_secret, secret => true;
     'DEFAULT/debug'                  : value => $debug;
     'DEFAULT/verbose'                : value => $verbose;
     'DEFAULT/notification_topics'    : value => $notification_topics;
