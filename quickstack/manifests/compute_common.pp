@@ -11,6 +11,7 @@
 #   Defaults to the value of nova_host if unset.
 
 class quickstack::compute_common (
+  $sahara_enabled               = $quickstack::params::sahara_enabled,
   $amqp_host                    = $quickstack::params::amqp_host,
   $amqp_password                = $quickstack::params::amqp_password,
   $amqp_port                    = '5672',
@@ -465,7 +466,7 @@ class quickstack::compute_common (
     repo_server => $repo_server,
     randomwait => 240,
   }
-  
+
   class {'moc_openstack::suricata':
   }
 

@@ -216,6 +216,10 @@ class quickstack::params (
   $glance_cert,
   $neutron_key,
   $neutron_cert,
+  $heat_key,
+  $heat_cert,
+  $sahara_key,
+  $sahara_cert,
 
   # neutron plugin config
   $neutron_core_plugin,
@@ -410,6 +414,14 @@ class quickstack::params (
   $ceilometer_keystone_tenant,
   $ceilometer_rabbit_port,
   $ceilometer_auth_url,
-  $ceilometer_backend
+  $ceilometer_backend,
+
+  # Sahara
+  $sahara_enabled,
+  $sahara_password,
+  $sahara_db_password,
+  $sahara_debug,
+  $heat_domain_password,
+  $sahara_plugins,
 ) {
 }
