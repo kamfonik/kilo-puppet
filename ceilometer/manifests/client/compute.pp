@@ -38,5 +38,9 @@ class ceilometer::client::compute (
     keystone_user     => $quickstack::params::ceilometer_keystone_user,
     keystone_tenant     => $quickstack::params::ceilometer_keystone_tenant
   }
+  ceilometer_config {
+     'publisher/metering_secret': ensure => absent;
+  }
+
 }
 
