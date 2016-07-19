@@ -177,7 +177,7 @@ class quickstack::db::mysql (
       }
     }
 
-    if ($ceilometer) {
+    if (str2bool_i($ceilometer)) {
       class { '::ceilometer::db::mysql':
         user          => $ceilometer_db_user,
         password      => $ceilometer_db_password,
@@ -187,7 +187,7 @@ class quickstack::db::mysql (
       }
     }
 
-    if ($sahara) {
+    if (str2bool_i($sahara)) {
       class { '::sahara::db::mysql':
         user          => $sahara_db_user,
         password      => $sahara_db_password,
