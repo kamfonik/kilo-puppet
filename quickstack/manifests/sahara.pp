@@ -21,14 +21,7 @@ class quickstack::sahara (
       }
     }
 
-
-  class { '::sahara::db::mysql':
-    password => $sahara_db_password,
-    host     => 'localhost',
-  }
-
   class { '::sahara':
-    database_connection => "mysql://sahara:${sahara_db_password}@localhost:3306/sahara",
     debug               => $sahara_debug,
     log_dir             => '/var/log/sahara',
     use_neutron         => true,

@@ -193,7 +193,8 @@ class quickstack::controller_common (
   $allow_migrate_to_same_host    = $quickstack::params::allow_migrate,
   $repo_server                   = $quickstack::params::repo_server,
   $elasticsearch_host            = $quickstack::params::elasticsearch_host,
-  $enable_ceilometer             = $quickstack::params::enable_ceilometer
+  $enable_ceilometer             = $quickstack::params::enable_ceilometer,
+  $sahara_db_password            = $quickstack::params::sahara_db_password,
 ) inherits quickstack::params {
 
   if str2bool_i("$use_ssl_endpoints") {
@@ -301,6 +302,7 @@ class quickstack::controller_common (
     nova_db_password     => $nova_db_password,
     cinder_db_password   => $cinder_db_password,
     neutron_db_password  => $neutron_db_password,
+    sahara_db_password   => $sahara_db_password,
 
     # MySQL
     mysql_bind_address     => '0.0.0.0',

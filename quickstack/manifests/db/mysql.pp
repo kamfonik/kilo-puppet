@@ -63,6 +63,8 @@ class quickstack::db::mysql (
     $cinder_db_password,
     $neutron_db_password,
     $ceilometer_db_password = false,
+    $sahara_db_password,
+    $
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
@@ -92,6 +94,10 @@ class quickstack::db::mysql (
     $ceilometer             = false,
     $ceilometer_db_user     = 'ceilometer',
     $ceilometer_db_dbname   = 'ceilometer',
+    # Sahara
+    $sahara                 = $quickstack::params::sahara_enabled,
+    $sahara_db_user         = 'sahara',
+    $sahara_db_dbname       = 'sahara',
     # General
     $allowed_hosts          = false,
     $charset                = 'utf8',
@@ -181,5 +187,16 @@ class quickstack::db::mysql (
         charset       => $charset,
       }
     }
+
+    if ($sahara) {
+      class { '::sahara::db::mysql':
+        user          => $sahara_db_user,
+        password      => $sahara_db_password,
+        dbname        => $sahara_db_dbname,
+        allowed_hosts => $allowed_hosts,
+        charset       => $charset,
+      }
+1    }
+
   }
 }
