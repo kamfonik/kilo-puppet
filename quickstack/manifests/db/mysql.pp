@@ -64,7 +64,6 @@ class quickstack::db::mysql (
     $neutron_db_password,
     $ceilometer_db_password = false,
     $sahara_db_password,
-    $
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
