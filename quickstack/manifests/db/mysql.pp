@@ -195,7 +195,7 @@ class quickstack::db::mysql (
         allowed_hosts => $allowed_hosts,
         charset       => $charset,
       }
-1    }
+    }
 
   }
 }
