@@ -37,7 +37,9 @@ class quickstack::sahara (
 
   sahara_config {
     'DEFAULT/heat_enable_wait_condition': value => false;
-    'DEFAULT/plugins': value => $sahara_plugins;
+    'DEFAULT/plugins':                    value => $sahara_plugins;
+    'DEFAULT/use_namespaces':             value => true;
+    'DEFAULT/use_rootwrap':               value => true;
   }
   
   sahara_config {
