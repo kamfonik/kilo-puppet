@@ -208,6 +208,13 @@ class quickstack::sahara (
   #  line    => 'SAHARA_AUTO_IP_ALLOCATION_ENABLED=True'
   #}
 
+  file_line { 'keystone_dns':
+    notify => Service['openstack-sahara-all'], # only restarts if change
+    path   => '/usr/lib/python2.7/site-packages/sahara/utils/cluster.py',
+    line   => "    for service in [\"object-store\"]",
+    match  => "(    for service in).*"
+  }
+
   file { '/usr/lib/python2.7/site-packages/sahara/service/heat/templates.py':
     notify => Service['openstack-sahara-all'], # only restarts if change
     ensure => file,
