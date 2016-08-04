@@ -211,7 +211,7 @@ class quickstack::sahara (
   file_line { 'keystone_dns':
     notify => Service['openstack-sahara-all'], # only restarts if change
     path   => '/usr/lib/python2.7/site-packages/sahara/utils/cluster.py',
-    line   => "    for service in [\"object-store\"]",
+    line   => "    for service in [\"object-store\"]:",
     match  => "(    for service in).*"
   }
 
