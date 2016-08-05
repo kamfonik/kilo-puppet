@@ -223,7 +223,15 @@ class quickstack::sahara (
     mode   => '0644',
     source => 'puppet:///modules/quickstack/sahara_templates.py',
   }
-  
+
+  file { '/etc/sudoers.d/sahara-rootwrap':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0640',
+    source => 'puppet:///modules/quickstack/sahara-rootwrap.fix'
+  }
+
   class { '::heat::keystone::domain':
     auth_url          => $keystone_auth_uri,
     keystone_admin    => 'admin',
