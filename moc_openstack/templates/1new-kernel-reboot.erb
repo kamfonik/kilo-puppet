@@ -17,6 +17,7 @@ fi
 if [ "$role" == "compute" ]; then
   [ "`rpm -q kernel|tail -n 1|cut -d l -f 2`" != "-`uname -r|cut -d l -f 1`" ] || exit
   . /root/keystonerc_admin
+  nova host-servers-migrate $hst
   [ "`nova hypervisor-list|wc -l`" == "5"  ] && reboot
   nova host-evacuate-live $hst > /dev/null
   while [ "`virsh list|wc -l`" != "3" ]; do
