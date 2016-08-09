@@ -349,6 +349,7 @@ class quickstack::controller_common (
     public_protocol         => $auth_protocol,
     internal_protocol       => $auth_protocol,
     admin_protocol          => $auth_protocol,
+    verbose                 => $verbose,
 
     #Not being passed to ::keystone, but still included in OS-puppet
     public_address          => $controller_pub_host,
@@ -907,8 +908,31 @@ class quickstack::controller_common (
     }
   }
 
-   filebeat::prospector { 'generic':
-      paths => ["/var/log/*.log", "/var/log/secure", "/var/log/messages", "/var/log/ceph/*", "/var/log/nova/*", "/var/log/neutron/*", "/var/log/openvswitch/*", "/var/log/cinder/*", "/var/log/glance/*", "/var/log/horizon/*", "/var/log/httpd/*", "/var/log/keystone/*"]
+   filebeat::prospector {'syslog':
+      paths => [
+        '/var/log/*.log',
+        '/var/log/secure',
+        '/var/log/messages',
+      ],
+      doc_type => 'syslog',
+    }
+
+   filebeat::prospector {'openstack-log':
+      paths => [
+        '/var/log/nova/*.log',
+        '/var/log/glance/*.log',
+        '/var/log/cinder/*.log',
+        '/var/log/keystone/*.log',
+        '/var/log/neutron/*.log',
+      ],
+      doc_type => 'openstack-log',
+    }
+
+   filebeat::prospector {'horizon-log':
+      paths => [
+        '/var/log/horizon/*.log',
+      ],
+      doc_type => 'horizon-log',
     }
 
   class {'moc_openstack::cronjob':
