@@ -202,6 +202,13 @@ class quickstack::sahara (
     after   => "DEFAULT_EXTJS_LIB_URL = 'http://dev.sencha.com/deploy/ext-2.2.zip'"
   }
 
+  file_line { 'job_fix':
+    notify  => Service['openstack-sahara-all'],
+    path    => '/usr/lib/python2.7/site-packages/sahara/service/edp/job_manager.py',
+    line    => "        if 'neutron' in curr_extra: curr_extra['neutron'] = curr_extra['neutron'].copy()",
+    after   => '        curr_extra = job_execution.extra.copy()',
+  }
+
   #file_line { 'disable_floating':
   #  notify  => Service['httpd'], # only restarts if a file changes
   #  path    => '/etc/openstack-dashboard/local_settings',
@@ -223,7 +230,7 @@ class quickstack::sahara (
     mode   => '0644',
     source => 'puppet:///modules/quickstack/sahara_templates.py',
   }
-
+  
   file { '/etc/sudoers.d/sahara-rootwrap':
     ensure => file,
     owner  => 'root',
