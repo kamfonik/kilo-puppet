@@ -228,7 +228,7 @@ class quickstack::sahara (
     ensure => file,
     owner  => 'root',
     group  => 'root',
-    mode   => '0640',
+    mode   => '0440',
     source => 'puppet:///modules/quickstack/sahara-rootwrap.fix'
   }
 
