@@ -898,77 +898,77 @@ class quickstack::controller_common (
 
   class { 'filebeat':
     outputs => {
-      'logstash'  => {
-	'hosts'        =>  [$elasticsearch_host],
-	'loadbalance' => true
+      'logstash' => {
+        'hosts'       =>  [$elasticsearch_host],
+        'loadbalance' => true
       }
     },
     logging => {
-      'level' => "info"
+      'level'    => "info"
     }
   }
 
   filebeat::prospector {'syslog':
-    paths => [
-        '/var/log/*.log',
-        '/var/log/secure',
-        '/var/log/messages',
+    paths    => [
+      '/var/log/*.log',
+      '/var/log/secure',
+      '/var/log/messages',
     ],
     doc_type => 'syslog',
   }
 
   filebeat::prospector {'neutron':
-    paths => [
-        '/var/log/neutron/*.log',
+    paths    => [
+      '/var/log/neutron/*.log',
     ],
     doc_type => 'neutron',
   }
 
   filebeat::prospector {'horizon':
-    paths => [
-        '/var/log/horizon/*.log',
+    paths    => [
+      '/var/log/horizon/*.log',
     ],
     doc_type => 'horizon',
   }
 
   filebeat::prospector {'nova':
-    paths => [
-        '/var/log/nova/*.log',
+    paths    => [
+      '/var/log/nova/*.log',
     ],
     doc_type => 'nova',
   }
 
   filebeat::prospector {'glance':
-    paths => [
-        '/var/log/glance/*.log',
+    paths    => [
+      '/var/log/glance/*.log',
     ],
     doc_type => 'glance',
   }
 
   filebeat::prospector {'cinder':
-    paths => [
-        '/var/log/cinder/*.log',
+    paths    => [
+      '/var/log/cinder/*.log',
     ],
     doc_type => 'cinder',
   }
 
   filebeat::prospector {'keystone':
-    paths => [
-        '/var/log/keystone/*.log',
+    paths    => [
+      '/var/log/keystone/*.log',
     ],
     doc_type => 'keystone',
   }
 
   filebeat::prospector {'ceilometer':
-    paths => [
-        '/var/log/ceilometer/*.log',
+    paths    => [
+      '/var/log/ceilometer/*.log',
     ],
     doc_type => 'ceilometer',
   }
 
   filebeat::prospector {'heat':
-    paths => [
-        '/var/log/heat/*.log',
+    paths    => [
+      '/var/log/heat/*.log',
     ],
     doc_type => 'heat',
   }

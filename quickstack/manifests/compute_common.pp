@@ -426,42 +426,42 @@ class quickstack::compute_common (
 
   class { 'filebeat':
     outputs => {
-      'logstash'  => {
-        'hosts'       =>  [$elasticsearch_host],
+      'logstash' => {
+        'hosts'       => [$elasticsearch_host],
         'loadbalance' => true
       }
     },
     logging => {
-      'level' => "info"
+      'level'    => "info"
     }
   }
 
   filebeat::prospector {'syslog':
-    paths => [
-        '/var/log/*.log',
-        '/var/log/secure',
-        '/var/log/messages',
+    paths    => [
+      '/var/log/*.log',
+      '/var/log/secure',
+      '/var/log/messages',
     ],
     doc_type => 'syslog',
   }
 
   filebeat::prospector {'neutron':
-    paths => [
-        '/var/log/neutron/*.log',
+    paths    => [
+      '/var/log/neutron/*.log',
     ],
     doc_type => 'neutron',
   }
 
   filebeat::prospector {'nova':
-    paths => [
-        '/var/log/nova/*.log',
+    paths    => [
+      '/var/log/nova/*.log',
     ],
     doc_type => 'nova',
   }
 
   filebeat::prospector {'ceilometer':
-    paths => [
-        '/var/log/ceilometer/*.log',
+    paths    => [
+      '/var/log/ceilometer/*.log',
     ],
     doc_type => 'ceilometer',
   }
