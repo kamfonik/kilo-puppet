@@ -228,6 +228,13 @@ class quickstack::sahara (
   #  line    => 'SAHARA_AUTO_IP_ALLOCATION_ENABLED=True'
   #}
 
+  file_line { 'mr_job':
+    notify  => Service['httpd'],
+    path    => '/usr/share/openstack-dashboard/openstack_dashboard/contrib/sahara/content/data_processing/jobs/workflows/create.py',
+    line    => "                'data-jobtype-mapreduce': _(\"Choose libraries\"),",
+    after   => "                'data-jobtype-java': _\u0028\"Choose libraries\"\u0029,"
+  }
+
   file_line { 'keystone_dns':
     notify => Service['openstack-sahara-all'], # only restarts if change
     path   => '/usr/lib/python2.7/site-packages/sahara/utils/cluster.py',
