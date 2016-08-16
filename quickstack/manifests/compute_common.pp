@@ -426,18 +426,44 @@ class quickstack::compute_common (
 
   class { 'filebeat':
     outputs => {
-      'logstash'  => {
-        'hosts'       =>  [$elasticsearch_host],
+      'logstash' => {
+        'hosts'       => [$elasticsearch_host],
         'loadbalance' => true
       }
     },
     logging => {
-      'level' => "info"
+      'level'    => "info"
     }
   }
 
-  filebeat::prospector { 'generic':
-      paths => ["/var/log/*.log", "/var/log/secure", "/var/log/messages", "/var/log/ceph/*", "/var/log/nova/*", "/var/log/neutron/*", "/var/log/openvswitch/*", "/var/log/cinder/*", "/var/log/glance/*", "/var/log/horizon/*", "/var/log/httpd/*", "/var/log/keystone/*"]
+  filebeat::prospector {'syslog':
+    paths    => [
+      '/var/log/*.log',
+      '/var/log/secure',
+      '/var/log/messages',
+    ],
+    doc_type => 'syslog',
+  }
+
+  filebeat::prospector {'neutron':
+    paths    => [
+      '/var/log/neutron/*.log',
+    ],
+    doc_type => 'neutron',
+  }
+
+  filebeat::prospector {'nova':
+    paths    => [
+      '/var/log/nova/*.log',
+    ],
+    doc_type => 'nova',
+  }
+
+  filebeat::prospector {'ceilometer':
+    paths    => [
+      '/var/log/ceilometer/*.log',
+    ],
+    doc_type => 'ceilometer',
   }
 
   # Installs scripts for automated backups  
