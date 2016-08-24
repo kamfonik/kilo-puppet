@@ -157,7 +157,14 @@ class quickstack::controller_common (
   $sensu_rabbitmq_user           = $quickstack::params::sensu_rabbitmq_user,
   $sensu_rabbitmq_password       = $quickstack::params::sensu_rabbitmq_password,
   $sensu_client_subscriptions    = $quickstack::params::sensu_subscriptions_controller,
-  $sensu_client_keepalive       = { "thresholds" => { "warning" => 60, "critical" => 300 }, "handlers" => $quickstack::params::sensu_handlers_controller, "refresh" => 3600 },
+  $sensu_client_keepalive        = { 
+                                     "thresholds" => {
+                                       "warning"  => 60, 
+                                       "critical" => 300 
+                                     }, 
+                                     "handlers"   => $quickstack::params::sensu_handlers_controller, 
+                                     "refresh"    => 3600 
+                                   },
   $ceph_key                      = $quickstack::params::ceph_key,
   $use_ssl_endpoints             = $quickstack::params::use_ssl_endpoints,
   $neutron_admin_password        = $quickstack::params::neutron_user_password,
@@ -821,18 +828,18 @@ class quickstack::controller_common (
   }
 #Customization for isntalling sensu
   class { '::sensu':
-    client => $sensu_client_enable,            
-    sensu_plugin_name => 'sensu-plugin',
-    sensu_plugin_version => 'installed',
+    client                => $sensu_client_enable,            
+    sensu_plugin_name     => 'sensu-plugin',
+    sensu_plugin_version  => 'installed',
     sensu_plugin_provider => 'gem',
-    purge_config => true,
-    rabbitmq_host => $sensu_rabbitmq_host,
-    rabbitmq_user => $sensu_rabbitmq_user,
-    rabbitmq_password => $sensu_rabbitmq_password,
-    rabbitmq_vhost => '/sensu',
-    subscriptions => $sensu_client_subscriptions,
+    purge_config          => true,
+    rabbitmq_host         => $sensu_rabbitmq_host,
+    rabbitmq_user         => $sensu_rabbitmq_user,
+    rabbitmq_password     => $sensu_rabbitmq_password,
+    rabbitmq_vhost        => '/sensu',
+    subscriptions         => $sensu_client_subscriptions,
     client_keepalive      => $sensu_client_keepalive,
-    plugins       => [
+    plugins               => [
        "puppet:///modules/sensu/plugins/check-mem.sh",
        "puppet:///modules/sensu/plugins/cpu-metrics.rb",
        "puppet:///modules/sensu/plugins/disk-usage-metrics.rb",

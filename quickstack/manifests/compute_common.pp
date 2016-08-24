@@ -91,7 +91,14 @@ class quickstack::compute_common (
   $sensu_rabbitmq_user          = $quickstack::params::sensu_rabbitmq_user,
   $sensu_rabbitmq_password      = $quickstack::params::sensu_rabbitmq_password,
   $sensu_client_subscriptions   = $quickstack::params::sensu_subscriptions_compute,
-  $sensu_client_keepalive       = { "thresholds" => { "warning" => 60, "critical" => 300 }, "handlers" => $quickstack::params::sensu_handlers_compute, "refresh" => 3600 },
+  $sensu_client_keepalive       = { 
+                                    "thresholds" => { 
+                                      "warning"  => 60, 
+                                      "critical" => 300 
+                                    }, 
+                                    "handlers"   => $quickstack::params::sensu_handlers_compute, 
+                                    "refresh" => 3600 
+                                  },
   $public_net                   = $quickstack::params::public_net,
   $private_net                  = $quickstack::params::private_net,
   $ntp_local_servers            = $quickstack::params::ntp_local_servers,
@@ -102,7 +109,7 @@ class quickstack::compute_common (
   $backups_script_local         = $quickstack::params::backups_script_local_name,
   $backups_dir                  = $quickstack::params::backups_directory,
   $backups_log                  = $quickstack::params::backups_log,
-  $backups_verbose		        = $quickstack::params::backups_verbose,
+  $backups_verbose              = $quickstack::params::backups_verbose,
   $backups_email                = $quickstack::params::backups_email,
   $backups_ssh_key              = $quickstack::params::backups_ssh_key,
   $backups_sudoers_d            = $quickstack::params::backups_sudoers_d,
