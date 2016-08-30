@@ -362,9 +362,14 @@ class quickstack::params (
   $gluster_volume3_uid,
 
   # sensu server
+  $sensu_client_enable,
   $sensu_rabbitmq_host,
   $sensu_rabbitmq_user,
   $sensu_rabbitmq_password,
+  $sensu_subscriptions_compute,
+  $sensu_subscriptions_controller,
+  $sensu_handlers_compute,
+  $sensu_handlers_controller,
 
   # Firewall
   $public_net,

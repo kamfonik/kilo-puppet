@@ -86,11 +86,19 @@ class quickstack::compute_common (
   $rbd_key                      = $quickstack::params::rbd_key,
   $ceph_iface                   = $quickstack::params::ceph_iface,
   $ceph_vlan                    = $quickstack::params::ceph_vlan,
+  $sensu_client_enable          = $quickstack::params::sensu_client_enable,
   $sensu_rabbitmq_host          = $quickstack::params::sensu_rabbitmq_host,
   $sensu_rabbitmq_user          = $quickstack::params::sensu_rabbitmq_user,
   $sensu_rabbitmq_password      = $quickstack::params::sensu_rabbitmq_password,
-  $sensu_client_subscriptions_compute = 'moc-sensu',
-  $sensu_client_keepalive       = { "thresholds" => { "warning" => 60, "critical" => 300 }, "handlers" => ["node-email"], "refresh" => 3600 },
+  $sensu_client_subscriptions   = $quickstack::params::sensu_subscriptions_compute,
+  $sensu_client_keepalive       = { 
+                                    "thresholds" => { 
+                                      "warning"  => 60, 
+                                      "critical" => 300 
+                                    }, 
+                                    "handlers"   => $quickstack::params::sensu_handlers_compute, 
+                                    "refresh" => 3600 
+                                  },
   $public_net                   = $quickstack::params::public_net,
   $private_net                  = $quickstack::params::private_net,
   $ntp_local_servers            = $quickstack::params::ntp_local_servers,
@@ -101,7 +109,7 @@ class quickstack::compute_common (
   $backups_script_local         = $quickstack::params::backups_script_local_name,
   $backups_dir                  = $quickstack::params::backups_directory,
   $backups_log                  = $quickstack::params::backups_log,
-  $backups_verbose		        = $quickstack::params::backups_verbose,
+  $backups_verbose              = $quickstack::params::backups_verbose,
   $backups_email                = $quickstack::params::backups_email,
   $backups_ssh_key              = $quickstack::params::backups_ssh_key,
   $backups_sudoers_d            = $quickstack::params::backups_sudoers_d,
@@ -389,7 +397,9 @@ class quickstack::compute_common (
     ensure => latest,
   }
 #Customization for configuring sensu
+
   class { '::sensu':
+    client                => $sensu_client_enable,
     sensu_plugin_name     => 'sensu-plugin',
     sensu_plugin_version  => 'installed',
     sensu_plugin_provider => 'gem',
@@ -398,7 +408,7 @@ class quickstack::compute_common (
     rabbitmq_user         => $sensu_rabbitmq_user,
     rabbitmq_password     => $sensu_rabbitmq_password,
     rabbitmq_vhost        => '/sensu',
-    subscriptions         => $sensu_client_subscriptions_compute,
+    subscriptions         => $sensu_client_subscriptions,
     client_keepalive      => $sensu_client_keepalive,
     plugins               => [
        "puppet:///modules/sensu/plugins/check-mem.sh",
@@ -420,6 +430,7 @@ class quickstack::compute_common (
     ]
   }
   
+
   class {'quickstack::ntp':
     servers => $ntp_local_servers,
   }
