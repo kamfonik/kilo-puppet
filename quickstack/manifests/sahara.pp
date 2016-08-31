@@ -259,6 +259,12 @@ class quickstack::sahara (
     source => 'puppet:///modules/quickstack/sahara-rootwrap.fix'
   }
 
+  file_line { 'pig_note':
+    path   => '/usr/share/openstack-dashboard/openstack_dashboard/contrib/sahara/content/data_processing/jobs/templates/data_processing.jobs/_create_job_help.html',
+    line   => '    <li>{% blocktrans %}Pig - <a href="https://github.com/jeremyfreudberg/sahara-image-elements/wiki/Running-Pig-jobs-on-Vanilla-MOC-Remix-clusters">See Note</a>{% endblocktrans %}</li>',
+    match  => '.*(Pig).*'
+  }
+
   class { '::heat::keystone::domain':
     auth_url          => $keystone_auth_uri,
     keystone_admin    => 'admin',
