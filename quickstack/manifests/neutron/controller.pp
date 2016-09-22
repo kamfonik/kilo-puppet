@@ -143,7 +143,7 @@ class quickstack::neutron::controller (
   $ml2_network_vlan_ranges       = ['physnet1:1000:2999'],
   $ml2_tunnel_id_ranges          = ['20:100'],
   $ml2_vxlan_group               = '224.0.0.1',
-  $ml2_vni_ranges                = ['10:100'],
+  $ml2_vni_ranges                = ['10:10000'],
   $ml2_security_group            = 'true',
   $amqp_provider                 = $quickstack::params::amqp_provider,
   $amqp_host                     = $quickstack::params::amqp_host,
