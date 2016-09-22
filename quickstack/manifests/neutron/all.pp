@@ -24,7 +24,7 @@ class quickstack::neutron::all (
   $ml2_network_vlan_ranges       = ['yourphysnet:10:50'],
   $ml2_tunnel_id_ranges          = ['20:100'],
   $ml2_vxlan_group               = '224.0.0.1',
-  $ml2_vni_ranges                = ['10:100'],
+  $ml2_vni_ranges                = ['10:10000'],
   $ml2_security_group            = 'True',
   $mysql_ca                      = undef,
   $mysql_host                    = '127.0.0.1',
