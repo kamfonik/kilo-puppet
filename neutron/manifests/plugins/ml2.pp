@@ -109,7 +109,7 @@ class neutron::plugins::ml2 (
   $network_vlan_ranges       = ['physnet1:1000:2999'],
   $tunnel_id_ranges          = ['20:100'],
   $vxlan_group               = '224.0.0.1',
-  $vni_ranges                = ['10:100'],
+  $vni_ranges                = ['10:10000'],
   $enable_security_group     = true,
   $package_ensure            = 'present',
   $supported_pci_vendor_devs = ['15b3:1004', '8086:10ca'],
