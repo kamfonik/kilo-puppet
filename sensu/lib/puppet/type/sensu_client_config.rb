@@ -47,6 +47,13 @@ Puppet::Type.newtype(:sensu_client_config) do
       is.sort == should.sort
     end
   end
+  
+  newproperty(:redact, :array_matching => :all) do
+    desc "An array of strings that should be redacted in the sensu client config"
+    def insync?(is)
+      is.sort == should.sort
+    end
+  end
 
   newproperty(:bind) do
     desc "The IP that client will bind to"

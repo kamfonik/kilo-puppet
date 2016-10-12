@@ -269,6 +269,7 @@ class sensu (
   $gem_path                    = '',
   $log_level                   = 'info',
   $dashboard                   = false,
+  $redact                      = undef,
   $init_stop_max_wait          = 10,
 ){
 
