@@ -838,6 +838,8 @@ class quickstack::controller_common (
     rabbitmq_password     => $sensu_rabbitmq_password,
     rabbitmq_vhost        => '/sensu',
     subscriptions         => $sensu_client_subscriptions,
+    redact                => $redact,
+    client_custom         => $client_custom,
     client_keepalive      => $sensu_client_keepalive,
     plugins               => [
        "puppet:///modules/sensu/plugins/check-mem.sh",
