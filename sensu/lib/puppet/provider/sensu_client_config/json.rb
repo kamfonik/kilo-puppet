@@ -51,7 +51,7 @@ Puppet::Type.type(:sensu_client_config).provide(:json) do
   end
 
   def check_args
-    ['name', 'address', 'subscriptions', 'safe_mode', 'bind', 'keepalive', 'port']
+    ['name', 'address', 'subscriptions', 'safe_mode', 'bind', 'keepalive', 'port', 'redact']
   end
 
   def client_name
@@ -93,7 +93,15 @@ Puppet::Type.type(:sensu_client_config).provide(:json) do
   def subscriptions=(value)
     conf['client']['subscriptions'] = value
   end
+  
+  def redact
+    conf['client']['redact'] || []
+  end
 
+  def redact=(value)
+    conf['client']['redact'] = value
+  end
+  
   def custom
     conf['client'].reject { |k,v| check_args.include?(k) }
   end

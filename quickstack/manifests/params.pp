@@ -370,6 +370,8 @@ class quickstack::params (
   $sensu_subscriptions_controller,
   $sensu_handlers_compute,
   $sensu_handlers_controller,
+  $redact,
+  $client_custom,
 
   # Firewall
   $public_net,
